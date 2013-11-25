@@ -1,0 +1,56 @@
+Agent.o: Agent.cpp Agent.hpp MetaAgent.hpp ProbabilityManager.hpp \
+ Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp
+AgentRecovery.o: AgentRecovery.cpp AgentRecovery.hpp Agent.hpp \
+ MetaAgent.hpp ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp \
+ connection.hpp RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp \
+ UserMsg.hpp UserInteraction.hpp UserQuestion.hpp RecoveryUnit.hpp
+Coordinator.o: Coordinator.cpp Coordinator.hpp MetaAgent.hpp \
+ ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp EnvironmentAgent.hpp Agent.hpp \
+ FileAgent.hpp VetoManager.hpp
+EnvironmentAgent.o: EnvironmentAgent.cpp EnvironmentAgent.hpp Agent.hpp \
+ MetaAgent.hpp ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp \
+ connection.hpp RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp \
+ UserMsg.hpp UserInteraction.hpp UserQuestion.hpp FileAgent.hpp
+EnvironmentRecovery.o: EnvironmentRecovery.cpp EnvironmentRecovery.hpp \
+ RecoveryUnit.hpp AgentRecovery.hpp Agent.hpp MetaAgent.hpp \
+ ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp EnvironmentAgent.hpp FileAgent.hpp \
+ ProcessAgent.hpp FileRecovery.hpp ProcessRecovery.hpp
+FileAgent.o: FileAgent.cpp FileAgent.hpp Agent.hpp MetaAgent.hpp \
+ ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp EnvironmentAgent.hpp
+FileRecovery.o: FileRecovery.cpp FileRecovery.hpp RecoveryUnit.hpp \
+ AgentRecovery.hpp Agent.hpp MetaAgent.hpp ProbabilityManager.hpp \
+ Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp FileAgent.hpp EnvironmentAgent.hpp
+FolderAgent.o: FolderAgent.cpp FolderAgent.hpp Agent.hpp MetaAgent.hpp \
+ ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp FileAgent.hpp EnvironmentAgent.hpp
+Message.o: Message.cpp Message.hpp
+MetaAgent.o: MetaAgent.cpp MetaAgent.hpp ProbabilityManager.hpp \
+ Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp
+ProcessAgent.o: ProcessAgent.cpp ProcessAgent.hpp Agent.hpp MetaAgent.hpp \
+ ProbabilityManager.hpp Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp FileAgent.hpp EnvironmentAgent.hpp
+ProcessRecovery.o: ProcessRecovery.cpp ProcessRecovery.hpp \
+ AgentRecovery.hpp Agent.hpp MetaAgent.hpp ProbabilityManager.hpp \
+ Server.hpp Client.hpp Message.hpp connection.hpp \
+ RecoveryEngineAbstract.hpp InteractionManagerAbstract.hpp UserMsg.hpp \
+ UserInteraction.hpp UserQuestion.hpp RecoveryUnit.hpp ProcessAgent.hpp \
+ FileAgent.hpp EnvironmentAgent.hpp FileRecovery.hpp
+RecoveryUnit.o: RecoveryUnit.cpp RecoveryUnit.hpp
+Server.o: Server.cpp Server.hpp Client.hpp Message.hpp connection.hpp
+UserMsg.o: UserMsg.cpp UserMsg.hpp UserInteraction.hpp
+UserQuestion.o: UserQuestion.cpp UserQuestion.hpp UserInteraction.hpp
+VetoManager.o: VetoManager.cpp VetoManager.hpp

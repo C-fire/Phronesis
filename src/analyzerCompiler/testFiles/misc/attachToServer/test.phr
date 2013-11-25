@@ -1,0 +1,51 @@
+Server abs {
+    attach EnvCoord;
+}
+
+Server localhost : abs {
+    address -> localhost;
+    attach EnvCoordb;
+}
+
+FileAgent fa {
+    filename -> afileimportantforthesystem;
+}
+
+Coordinator EnvCoord {
+    needs FileAgent a = fa;
+}
+
+
+FileAgent fb {
+    filename -> anotherfileimportantforthesystem;
+}
+
+Coordinator EnvCoordb {
+    needs FileAgent a = fb;
+}
+
+Server hops : localhost {
+    address -> hops;
+}
+
+ProcessAgent fakeProc {
+    procName -> somt;
+    server -> localhost;
+    cpu_time -> 36;
+    envVar -> ORACLE_DE_MERDE=/dadada;
+}
+
+
+ProcessAgent realProc : fakeProc {
+    envVar -> JE_CONFIRME;
+}
+
+ProcessAgent emptyProc {
+    procName ->empyt;
+    server -> localhost;
+}
+
+Coordinator TestCoord {
+    needs ProcessAgent f = realProc;
+    needs ProcessAgent f2 = emptyProc;
+}

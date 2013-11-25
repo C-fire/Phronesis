@@ -1,0 +1,50 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">Found entries</h2>
+<p class="meta">Content of the database related to your search</p>
+<div class="entry">
+You searched for "{{ query_string }}" and the results are listed below.
+<ul>
+  <li>
+     <h3>MetaAgents</h3>
+     <ul>
+       {% for ma in metaagent_entries %}
+         <li><a href="{% url 'metaAgent_detail' ma.id %}">{{ ma.name }}</a></li>
+       {% endfor %}
+     </ul>
+  </li>
+  <li>
+     <h3>History reponsible</h3>
+     <ul>
+       {% for hi in history_entries %}
+         <li><a href="{% url 'history_detail' hi.id %}">{{ hi.date }}</a> : {{ hi.time }} : {{ hi.responsible }}</li>
+       {% endfor %}
+     </ul>
+  </li>
+  <li>
+     <h3>Servers</h3>
+     <ul>
+       {% for se in server_entries %}
+         <li><a href="{% url 'server_detail' se.id %}">{{ se.name }}</a></li>
+       {% endfor %}
+     </ul>
+  </li>
+</ul>
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <h3>MetaAgents</h3>
+  <p>List of metaAgents whose name matches the search</p>
+</li>
+<li>
+  <h3>Server</h3>
+  <p>List of servers whose name matches the search</p>
+</li>
+<li>
+  <h3>History</h3>
+  <p>List of history recoveries whose responsible matches the search</p>
+</li>
+
+{% endblock %}

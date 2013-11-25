@@ -1,0 +1,18 @@
+Server LHCb_base {
+    mountpoint -> nfs:/nfsexports/software /sw nfs rw,hard,intr,nolock 0 0;
+    mountpoint -> nfs:/nfsexports/grouphomes /group nfs rw,hard,intr 0 0;
+    mountpoint -> homenfs:/nfsexports/userhomes /home nfs rw,hard,intr 0 0;
+    mountpoint -> nfs:/nfsexports/admin /admin nfs rw,hard,intr 0 0;
+    mountpoint -> nfs:/nfsexports/scratch /scratch nfs rw,hard,intr 0 0;
+    mountpoint -> nfs:/nfsexports/calib /calib nfs ro,hard,intr 0 0;
+}
+
+
+Server gw01 : LHCb_base {
+    address -> gw01;
+}
+
+FileAgent f {
+    filename -> dada;
+    server gw01;
+}

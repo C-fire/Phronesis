@@ -1,0 +1,115 @@
+Drop database  IF EXISTS phronesisAnalyzer;
+create database phronesisAnalyzer;
+use phronesisAnalyzer;
+source /home/chaen/phronesis/phronesisAnalyzer.sql;
+insert into Total(id) value (1);
+insert into Total(id) value (2);
+insert into Total(id) value (3);
+insert into Total(id) value (4);
+insert into Total(id) value (5);
+insert into Total(id) value (6);
+insert into Total(id) value (7);
+insert into Total(id) value (8);
+insert into Total(id) value (9);
+insert into Total(id) value (10);
+
+
+insert into Occurrence(id) value (1);
+insert into Occurrence(id) value (2);
+insert into Occurrence(id) value (3);
+insert into Occurrence(id) value (4);
+insert into Occurrence(id) value (5);
+insert into Occurrence(id) value (6);
+insert into Occurrence(id) value (7);
+insert into Occurrence(id) value (8);
+insert into Occurrence(id) value (9);
+insert into Occurrence(id) value (10);
+insert into Occurrence(id) value (11);
+insert into Occurrence(id) value (12);
+
+
+insert into Server(id, name, address) values (1, 'NfsSrv', 'devexpert02');
+insert into Server(id, name, address) values (2, 'WebSrv01', 'devexpert03');
+insert into Server(id, name, address) values (3, 'WebSrv02', 'devexpert04');
+insert into Server(id, name, address) values (4, 'inst', '192.168.1.1');
+
+
+insert into MetaAgent (id, name, type, id_total, classification) values (1,'Site1File', 'Coordinator', 4, 'A-2');
+insert into MetaAgent (id, name, type, id_total, classification) values (2,'Web', 'Coordinator', 7, 'A-0');
+insert into MetaAgent (id, name, type, id_total, classification) values (3,'Site2', 'Coordinator', 3, 'A-1');
+insert into MetaAgent (id, name, type, id_total, classification) values (4,'Site2File', 'Coordinator', 4, 'A-2');
+insert into MetaAgent (id, name, type, id_total, classification) values (5,'Site1', 'Coordinator', 3, 'A-1');
+insert into MetaAgent (id, name, type, id_total, classification) values (6,'Nfs', 'Coordinator', 1, 'B-0');
+insert into MetaAgent (id, name, type, id_total, classification) values (7,'Mysql', 'Coordinator', 10, 'A-1');
+
+
+insert into MetaAgent (id, name, type, id_server) values (8,'WebSrv01_fstab', 'FileAgent', 2);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (1, 8, '/etc/fstab', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server) values (9,'NfsSrv_fstab', 'FileAgent', 1);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (2, 9, '/etc/fstab', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server) values (10,'s1Index', 'FileAgent', 1);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (3, 10, '/devweb/site1/index.php', 'root', 'root', '', '', '827406447ac02d10842e4a9fa050d99e');
+insert into MetaAgent (id, name, type, id_server) values (11,'Site1Index', 'FileAgent', 2);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (4, 11, '/var/www/html/index.php', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server) values (12,'inst_fstab', 'FileAgent', 4);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (5, 12, '/etc/fstab', '', '', '', '', '');
+insert into FileContentRules (id_file, rule) values (5, 'fake mountpoint');
+insert into MetaAgent (id, name, type, id_server) values (13,'s2Index', 'FileAgent', 1);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (6, 13, '/devweb/site2/index.php', 'root', 'root', '', '', '6c88b56016412cb5c4736154a1bbe530');
+insert into MetaAgent (id, name, type, id_server) values (14,'Site2Index', 'FileAgent', 3);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (7, 14, '/var/www/html/index.php', '', '', '', '', '6c88b56016412cb5c4736154a1bbe530');
+insert into MetaAgent (id, name, type, id_server) values (15,'WebSrv02_fstab', 'FileAgent', 3);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (8, 15, '/etc/fstab', '', '', '', '', '');
+insert into FileContentRules (id_file, rule) values (8, 'devexpert02:/devweb/site2/ /var/www/html/ nfs ro,hard,intr 0 0');
+insert into MetaAgent (id, name, type, id_server) values (16,'exportFile', 'FileAgent', 1);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (9, 16, '/etc/exports', '', '', '', '', '');
+insert into FileContentRules (id_file, rule) values (9, '/devweb \\*\\(ro,root_squash,no_wdelay,fsid=1\\)');
+
+
+insert into MetaAgent (id, name, type, id_server) values (17,'nfsd', 'ProcessAgent', 1);
+insert into ProcessAgent (id, id_metaAgent, procName, user, multiplicity) values (1, 17, '*nfsd', 'root', -1);
+insert into MetaAgent (id, name, type, id_server) values (18,'MetaHttpd_Site1', 'ProcessAgent', 2);
+insert into ProcessAgent (id, id_metaAgent, procName, user, multiplicity) values (2, 18, '/usr/sbin/httpd', 'root', -1);
+insert into MetaAgent (id, name, type, id_server) values (19,'MetaHttpd_Site2', 'ProcessAgent', 3);
+insert into ProcessAgent (id, id_metaAgent, procName, user, multiplicity) values (3, 19, '/usr/sbin/httpd', 'root', -1);
+insert into MetaAgent (id, name, type, id_server) values (20,'mysqld', 'ProcessAgent', 3);
+insert into ProcessAgent (id, id_metaAgent, procName, user, multiplicity) values (4, 20, '/usr/bin/mysqld', 'mysql', -1);
+insert into ProcessLimits(id, id_proc, id_limit, value) values (1, 4, 0, 5);
+insert into MetaAgent (id, name, type, id_server) values (21,'MetaHttdpChild_Site2', 'ProcessAgent', 3);
+insert into ProcessAgent (id, id_metaAgent, procName, user, multiplicity) values (5, 21, '/usr/sbin/httpd', 'apache', -1);
+update ProcessAgent set id_parent = 3 where id = 5;
+insert into MetaAgent (id, name, type, id_server) values (22,'MetaHttdpChild_Site1', 'ProcessAgent', 2);
+insert into ProcessAgent (id, id_metaAgent, procName, user, multiplicity) values (6, 22, '/usr/sbin/httpd', 'apache', -1);
+update ProcessAgent set id_parent = 2 where id = 6;
+
+
+insert into MetaAgent (id, name, type, id_server) values (23,'WebSrv01_env', 'EnvironmentAgent', 2);
+insert into EnvironmentAgent (id, id_metaAgent) values (1, 23);
+insert into MetaAgent (id, name, type, id_server) values (24,'WebSrv02_env', 'EnvironmentAgent', 3);
+insert into EnvironmentAgent (id, id_metaAgent) values (2, 24);
+insert into MetaAgent (id, name, type, id_server) values (25,'NfsSrv_env', 'EnvironmentAgent', 1);
+insert into EnvironmentAgent (id, id_metaAgent) values (3, 25);
+insert into MetaAgent (id, name, type, id_server) values (26,'inst_env', 'EnvironmentAgent', 4);
+insert into EnvironmentAgent (id, id_metaAgent) values (4, 26);
+
+
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (1, 1, 11, 9);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (2, 2, 3, 11);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (3, 2, 5, 10);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (4, 2, 7, 12);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (5, 3, 19, 7);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (6, 3, 4, 6);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (7, 4, 14, 8);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (8, 5, 18, 7);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (9, 5, 1, 6);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (10, 6, 10, 3);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (11, 6, 13, 4);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (12, 6, 16, 2);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (13, 6, 17, 1);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (14, 7, 20, 5);
+
+
+insert into Rule (id, id_prior, id_after, occurrence, validity) values (1, 7, 3, 0, 1);
+
+
+insert into RecoveryRule (id, id_ma1, action1, id_ma2, action2, direction) values (1, 14, 'any', 19, 'something', 'after');

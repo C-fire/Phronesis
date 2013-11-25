@@ -1,0 +1,7 @@
+FileAgent exportFile{
+        server -> $nfsHost;
+        filename -> /etc/exports;
+        content -> "/devweb \\*\\(ro,root_squash,no_wdelay,fsid=1\\)";
+        content -> "otherContent";
+}
+

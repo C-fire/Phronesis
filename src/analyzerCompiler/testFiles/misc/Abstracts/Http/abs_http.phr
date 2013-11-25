@@ -1,0 +1,51 @@
+ProcessAgent abs_httpd {
+        procName -> /usr/sbin/httpd;
+        user -> root;
+        service -> httpd;
+        server -> $webSrv;
+}
+
+ProcessAgent abs_httdpChild {
+        parent -> abs_httpd;
+        user -> $webUser;
+}
+
+Coordinator abs_webSite {
+        needs Coordinator n_c_data;
+        needs Coordinator n_c_conf;
+        needs ProcessAgent n_p_httpd = abs_httpd;
+}
+
+
+
+FolderAgent default_documentRoot {
+    filename -> /var/www/html;
+    server -> $webSrv;
+}
+
+Coordinator default_Data { 
+    needs FolderAgent n_fo_data = default_documentRoot;
+}
+
+
+FileAgent default_httpdConf {
+    filename -> /etc/httpd/conf/httpd.conf;
+    owner -> root;
+    group -> root;
+    content -> Listen 80;
+    server -> $webSrv;
+}
+
+Coordinator default_Conf {
+    needs FileAgent n_fi_conf = default_httpdConf;
+}
+
+Coordinator default_webSite : abs_webSite { 
+    n_c_data = default_Data;
+    n_c_conf = default_Conf;
+    set $webUser apache;
+}
+
+
+
+

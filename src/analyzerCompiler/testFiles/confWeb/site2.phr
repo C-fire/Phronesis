@@ -1,0 +1,38 @@
+import servers.phr;
+import metasite.phr;
+import mysql.phr;
+
+FileAgent Site2Index {
+	after any trigger something on MetaHttpd_Site2;
+	filename -> /var/www/html/index.php;
+	server -> $varSrv;
+	md5 -> 6c88b56016412cb5c4736154a1bbe530;
+	content -> This comes from the storage;
+}
+
+
+Coordinator Site2Data {
+	needs FileAgent index;
+	index = Site2Index;
+        setEnv WebSrv02 mountpoint devexpert02:/devweb/site2/ /var/www/html/ nfs ro,hard,intr 0 0;
+        setEnv MetaServer mountpoint fake mountpoint;
+
+}
+
+FileAgent Site2CfgFile{
+        server -> $varSrv;
+        filename -> /etc/httpd/conf.d/httpd.conf;
+}
+
+Coordinator Site2Conf {
+  needs FileAgent b = Site2CfgFile;
+}
+
+
+
+Coordinator Site2 : Site {
+	requires Mysql;
+	Data = Site2Data;
+        Conf = Site2Conf;
+	set $varSrv WebSrv02;
+}

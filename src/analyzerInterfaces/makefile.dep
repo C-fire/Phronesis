@@ -1,0 +1,8 @@
+automTestGeneric.o: automTestGeneric.cpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerClientApi/phronesisAnalyzerClientApi.hpp
+icingaOutputParse.o: icingaOutputParse.cpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerClientApi/phronesisAnalyzerClientApi.hpp
+phronesisXmlClient.o: phronesisXmlClient.cpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerClientApi/phronesisAnalyzerClientApi.hpp
+phrStat.o: phrStat.cpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerClientApi/phronesisAnalyzerClientApi.hpp

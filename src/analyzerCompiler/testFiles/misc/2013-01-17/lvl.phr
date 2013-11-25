@@ -1,0 +1,33 @@
+Server localhost{
+    address -> localhost;
+}
+
+
+
+FileAgent f1 {
+    filename -> f1;
+    server -> $srv;
+}
+
+FileAgent f2 {
+    filename -> f2;
+    server -> $srv;
+}
+
+Coordinator Lvl2{
+    needs FileAgent n_f = f2;
+}
+
+Coordinator Lvl1{
+    needs Coordinator n_2 = Lvl2;
+    needs FileAgent n_f = f1;
+}
+
+Coordinator Lvl0{
+    needs Coordinator n_1 = Lvl1;
+}
+
+
+Coordinator MyLvl:Lvl0{
+    set $srv localhost;
+}

@@ -1,0 +1,13 @@
+$.ajaxSetup ({
+    // Disable caching of AJAX responses
+    cache: false
+});
+
+window.setInterval(refreshConsole, 1000);
+
+function refreshConsole() {  
+//    alert('Refresh');
+    $("#console").load("http://127.0.0.1:8000/static/scripts/demo_test.txt");
+    //$("#console").load("/scripts/demo_test.txt");
+}
+

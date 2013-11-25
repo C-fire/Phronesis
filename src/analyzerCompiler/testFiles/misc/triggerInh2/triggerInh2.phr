@@ -1,0 +1,42 @@
+# DO NOT TOUCH!! USED TO ILLUSTRATE A BUG
+
+Server localhost {
+  address -> localhost;
+}
+
+FileAgent x {
+  server -> $srv;
+  filename -> x;
+}
+
+FileAgent y {
+  server -> $srv;
+  filename -> y;
+  after ANY trigger FILE_CREATE on x;
+}
+
+Coordinator B {
+  needs FileAgent nx = x;
+  needs FileAgent ny = y;
+}
+
+Coordinator A {
+  needs Coordinator nb = B;
+}
+
+Coordinator real1 : A{
+  set $srv localhost;
+}
+
+FileAgent realy : y {
+  triggerSuffix -> _real2;
+}
+
+Coordinator realB : B {
+  ny = realy;
+}
+
+Coordinator real2 : A{
+  nb = realB;
+  set $srv localhost;
+}

@@ -1,0 +1,43 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">Dependency list</h2>
+<p class="meta"> All the Dependencies between Coordinators stored in the database</p>
+<div class="entry">
+{% if dependency_list %}
+    <table border="1">
+    <tr>
+        <th>Coordinator</th>
+        <th>Required by</th>
+        <th>Occurrence</th>
+        <th>Validity</th>
+    </tr>
+    {% for dependency in dependency_list %}
+        <tr>
+           <td><a href="{% url 'metaAgent_detail' dependency.id_prior.id %}">{{ dependency.id_prior.name }}</a></td>
+           <td><a href="{% url 'metaAgent_detail' dependency.id_after.id %}">{{ dependency.id_after.name }}</a></td>
+           <td align=center>{{ dependency.occurrence }}</td>
+           <td>
+           {% if dependency.validity %}
+           Yes
+           {% else %}
+           No 
+           {% endif %}
+           (<a href="{% url 'dependency_validitySwap' dependency.id %}">change</a>)
+           </td>
+
+
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No Dependency is available.</p>
+{% endif %}
+
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <p>This page lists all the Dependencies between Coordinators.</p>
+</li>
+{% endblock %}

@@ -1,0 +1,73 @@
+ProcessAgent abs_gearmand{
+        procName -> /usr/sbin/gearmand;
+        service -> gearmand;
+        user -> $gearmanUser;
+        server -> $gearmanSrv;
+}
+
+
+FileAgent abs_gearmandConf {
+        filename -> /etc/mod_gearman/mod_gearman_neb.conf;
+        server -> $gearmanSrv;
+        after ANY trigger PROCESS_RESTART on abs_gearmand;
+}
+
+
+
+Coordinator abs_gearmanServer{
+        needs ProcessAgent n_p_gearmand = abs_gearmand;
+        needs FileAgent n_f_gearmandConf = abs_gearmandConf;
+}
+
+
+Coordinator default_gearmanServer : abs_gearmanServer{
+    set $gearmanUser gearmand;
+}
+
+
+
+ProcessAgent abs_gearmanWorkerProc{
+        procName -> /usr/bin/mod_gearman_worker;
+        user -> $gearmanWorkerUser;
+        server -> $gearmanWorkerSrv;
+        service -> mod_gearman_worker;
+}
+
+
+
+FileAgent abs_gearmanWorkerConf {
+        filename -> /etc/mod_gearman/mod_gearman_worker.conf;
+        server -> $gearmanWorkerSrv;
+        after ANY trigger PROCESS_RESTART on abs_gearmanWorkerProc;
+}
+
+
+
+Coordinator abs_gearmanWorker{
+        needs ProcessAgent n_p_gearmanWorkerProc = abs_gearmanWorkerProc;
+        needs FileAgent n_fi_gearmanWorkerConf = abs_gearmanWorkerConf;
+#        needs Coordinator n_c_icingaPlugins;
+}
+
+
+Coordinator default_gearmanWorker : abs_gearmanWorker{
+    set $gearmanWorkerUser gearmand;
+}
+
+
+
+Coordinator abs_gearman{
+        needs Coordinator n_c_gearmanServer;
+        needs Coordinator n_c_allGearmanWorkers;
+}
+
+
+
+
+
+
+
+
+
+
+

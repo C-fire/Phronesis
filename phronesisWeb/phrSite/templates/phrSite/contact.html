@@ -1,0 +1,11 @@
+{% block content %}
+<form action="/phrSite/Form/{{history_id}}/" method="post">{% csrf_token %}
+    {{ form.non_field_errors }}
+
+       {{ form.content.errors }}
+        <label for="id_content">Content</label>
+        {{ form.content }}
+    <p><input type="submit" value="Update" /></p>
+</form>
+
+{% endblock %}

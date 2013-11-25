@@ -1,0 +1,36 @@
+Server localhost {
+  address -> localhost;
+}
+
+FileAgent b {
+  filename -> b;
+  server -> localhost;
+}
+
+Coordinator u {
+  needs FileAgent n_b = b;
+}
+
+FileAgent c {
+  filename -> c;
+  server -> localhost;
+}
+
+Coordinator A{
+  needs Coordinator n_u = u;
+  needs FileAgent n_c = c;
+}
+
+Coordinator D : A {
+}
+
+Coordinator E : A {
+}
+
+Coordinator F {
+  needs Coordinator n_d = D;
+  needs Coordinator n_e = E;
+}
+
+Coordinator G : F {
+}

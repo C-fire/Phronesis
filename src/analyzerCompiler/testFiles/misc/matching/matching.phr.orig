@@ -1,0 +1,72 @@
+Server localhost {
+    address -> localhost;
+}
+
+ProcessAgent httpd {
+        procName -> /usr/sbin/httpd;
+        user -> root;
+        server -> $webSrv;
+}
+
+ProcessAgent httdpChild {
+        parent ->httpd;
+        user -> $webUser;
+}
+
+Coordinator WebSite {
+        needs Coordinator n_Data;
+        needs Coordinator n_Conf;
+        needs ProcessAgent n_httpd = httpd;
+}
+
+FileAgent F1 {
+    server -> $webSrv;
+    filename -> f1;
+}
+
+FileAgent F2 {
+    server -> $webSrv;
+    filename -> f2;
+}
+
+Coordinator S1_Conf {
+    needs FileAgent f = F1;
+}
+
+Coordinator S1_Data {
+    needs FileAgent f = F2;
+}
+
+Coordinator Site1 : WebSite { 
+    n_Data = S1_Data;
+    n_Conf = S1_Conf;
+    set $webSrv localhost;
+    set $webUser apache;
+}
+
+
+FileAgent F3 {
+    server -> $webSrv;
+    filename -> f3;
+}
+
+FileAgent F4 {
+    server -> $webSrv;
+    filename -> f4;
+}
+
+Coordinator S2_Conf {
+    needs FileAgent f = F3;
+}
+
+Coordinator S2_Data {
+    needs FileAgent f = F4;
+}
+
+Coordinator Site2 : WebSite { 
+    n_Data = S2_Data;
+    n_Conf = S2_Conf;
+    set $webSrv localhost;
+    set $webUser apache;
+}
+

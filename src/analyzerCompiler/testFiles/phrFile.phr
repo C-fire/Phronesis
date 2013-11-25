@@ -1,0 +1,87 @@
+ProcessAgent MetaHttpd {
+        procName -> /usr/sbin/httpd;
+        user -> root;
+        server -> $varSrv;
+}
+
+ProcessAgent MetaHttdpChild {
+        parent -> MetaHttpd;
+        user -> apache;
+}
+
+Coordinator Site {
+        needs Coordinator File;
+        needs Coordinator Conf;
+        needs ProcessAgent httpd;
+        httpd = MetaHttpd;
+}
+
+
+FileAgent Site1Index{
+        server -> $varSrv;
+        filename -> /var/www/html/index.php;
+        content -> "/devweb * (ro,root_squash,no_wdelay,fsid=1)";
+
+}
+
+Coordinator Site1File {
+        needs FileAgent a;
+        a = Site1Index;
+}
+
+
+FileAgent Site1MainConf{
+        server -> $varSrv;
+        filename -> /etc/http/conf/httpd.conf;
+}
+
+Coordinator Site1Conf{
+	needs FileAgent a;
+	a = Site1MainConf;
+}
+
+
+
+Coordinator Site1 : Site {
+       set $varSrv WebSrv01;
+       File = Site1File;
+       Conf = Site1Conf;
+}
+
+
+
+FileAgent Site2Index{
+        server -> $varSrv;
+        filename -> /var/www/html/index.php;
+        content -> "/devweb * (ro,root_squash,no_wdelay,fsid=2)";
+
+}
+
+Coordinator Site2File {
+        needs FileAgent a;
+        a = Site2Index;
+}
+
+
+FileAgent Site2MainConf{
+        server -> $varSrv;
+        filename -> /etc/http/conf/httpd.conf;
+}
+
+Coordinator Site2Conf{
+        needs FileAgent a;
+        a = Site2MainConf;
+}
+
+
+
+Coordinator Site2 : Site {
+       set $varSrv WebSrv02;
+       File = Site2File;
+       Conf = Site2Conf;
+}
+
+~
+~
+~
+

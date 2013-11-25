@@ -1,0 +1,13 @@
+import site1.phr;
+import site2.phr;
+import mysql.phr;
+
+
+Coordinator Web {
+	needs Coordinator x;
+	needs Coordinator y;
+	needs Coordinator z;
+	x = Site1;
+	y = Site2;
+	z = Mysql;
+}

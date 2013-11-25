@@ -1,0 +1,17 @@
+ProcessAgent MetaHttpd {
+	procName -> /usr/sbin/httpd;
+	user -> root;
+	server -> $varSrv;
+}
+
+ProcessAgent MetaHttdpChild {
+	parent -> MetaHttpd;
+	user -> apache;
+}
+
+Coordinator Site {
+	needs Coordinator Conf;
+	needs Coordinator Data;
+	needs ProcessAgent httpd;
+	httpd = MetaHttpd;
+}

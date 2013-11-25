@@ -1,0 +1,36 @@
+import abs_Icinga.phr;
+
+ProcessAgent abs_ido2db{
+        procName -> /usr/bin/ido2db;
+        user -> $ido2dbUser;
+        service -> ido2db;
+        server -> $ido2dbSrv;
+}
+
+
+FileAgent abs_idomodConf {
+        filename -> /etc/icinga/idomod.cfg;
+        server -> $icingaSrv;
+        after ANY trigger PROCESS_RESTART on $icingaProc;
+}
+
+FileAgent abs_ido2dbConf {
+        filename -> /etc/icinga/ido2db.cfg;
+        server -> $ido2dbSrv;
+        after ANY trigger PROCESS_RESTART on abs_ido2db;
+
+}
+
+
+Coordinator abs_idoutils{
+        needs FileAgent n_fi_idomodConf = abs_idomodConf;
+        needs FileAgent n_fi_ido2dbConf = abs_ido2dbConf;
+        needs ProcessAgent n_p_ido2b = abs_ido2db;
+}
+
+Coordinator default_idoutils : abs_idoutils {
+    set $ido2dbUser nagios;
+}
+
+
+

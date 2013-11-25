@@ -1,0 +1,43 @@
+import servers.phr;
+
+ProcessAgent nfsd{
+	server -> $nfsHost;
+	procName -> *nfsd;
+	user -> root;
+}
+
+
+FileAgent exportFile{
+	server -> $nfsHost;
+	filename -> /etc/exports;
+	content -> "/devweb \\*\\(ro,root_squash,no_wdelay,fsid=1\\)";
+}
+
+FileAgent s1Index {
+	server -> $nfsHost;
+	filename -> /devweb/site1/index.php;
+	owner -> root;
+	grp -> root;
+	md5 -> 827406447ac02d10842e4a9fa050d99e;
+}
+
+FileAgent s2Index {
+	server -> $nfsHost;
+	filename -> /devweb/site2/index.php;
+	owner -> root;
+	grp -> root;
+	md5 -> 6c88b56016412cb5c4736154a1bbe530;
+}
+
+
+Coordinator Nfs{
+	needs ProcessAgent n;
+	needs FileAgent f;
+	needs FileAgent fs1;
+	needs FileAgent fs2;
+	n = nfsd;
+	f = exportFile;
+	fs1 = s1Index;
+	fs2 = s2Index;
+	set $nfsHost NfsSrv;
+}

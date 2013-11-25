@@ -1,0 +1,15 @@
+Server absServer{
+}
+
+Server realServer1{
+  address -> dada;
+}
+
+Server realServer2{
+  address -> dada;
+}
+
+FileAgent X{
+  filename -> hop;
+  server -> absServer;
+}

@@ -1,0 +1,517 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">{{ metaagent.name }}</h2>
+<p class="meta">All the information stored in the database</p>
+<div class="entry">
+<table border="1">
+<tr>
+  <th>type</th>
+  <td align="center">{{ metaagent.type }}</td>
+</tr>
+<tr>
+  <th>Valid</th>
+  <td align="center">{{ metaagent.valid }}</td>
+</tr>
+{% if metaagent.metaagenttree_daughter.all %}
+<tr>
+  <th>Parent</th>
+  <td align="center">
+      {% for parent in metaagent.metaagenttree_daughter.all %}
+      <a href="{% url 'metaAgent_detail' parent.id_parent.id %}">{{ parent.id_parent.name }} </a>
+    {% endfor %}
+  </td>
+</tr>
+{% endif %} 
+
+<!--  COORDINATOR START -->
+{% if metaagent.type == "Coordinator" %}
+
+<tr>
+  <th>Shared Total</th>
+  <td align="center">{{ metaagent.id_total.total }}</td>
+</tr>
+<tr>
+  <th>Local Total</th>
+  <td align="center">{{ metaagent.local_total }}</td>
+</tr>
+<tr>
+  <th>Tolerate</th>
+  <td align="center">{{ metaagent.tolerate }}</td>
+</tr>
+<tr>
+  <th>Children</th>
+  <td>
+    <ul>
+      {% for child in metaagent.metaagenttree_parent.all %}
+      <li><a href="{% url 'metaAgent_detail' child.id_daughter.id %}">{{ child.id_daughter.name }}</a> ( {{ child.local_occurrence }} / {{ child.id_occurrence.occurrence }})</li>
+    {% endfor %}
+    </ul>
+  </td>
+</tr>
+
+
+
+{% else %}
+
+<th>Server</th>
+  <td align="center"><a href="{% url 'server_detail' metaagent.id_server.id %}">{{ metaagent.id_server.name }}</a></td>
+</tr>
+
+{% if  metaagent.type == "FileAgent" or metaagent.type == "FolderAgent" %}
+<!--  FILE/FOLDER START -->
+  {% for fa in metaagent.fileagent_set.all %}
+    <tr>
+      <th>Filename</th>
+      <td align="center">{{ fa.filename }}</td>
+    </tr>
+
+    {% if fa.owner %}
+    <tr>
+      <th>Owner</th>
+      <td align="center">{{ fa.owner }}</td>
+    </tr>
+    {% endif %}
+
+
+    {% if fa.grp %}
+    <tr>
+      <th>Group</th>
+      <td align="center">{{ fa.grp }}</td>
+    </tr>
+    {% endif %}
+
+
+    {% if fa.permissions %}
+    <tr>
+      <th>Permissions</th>
+      <td align="center">{{ fa.permissions }}</td>
+    </tr>
+    {% endif %}
+
+
+    {% if fa.attributes %}
+    <tr>
+      <th>Attributes</th>
+      <td align="center">{{ fa.attributes }}</td>
+    </tr>
+    {% endif %}
+
+    {% if  metaagent.type == "FileAgent" %}
+    <!--  FILE START -->
+
+    {% if fa.md5 %}
+    <tr>
+      <th>MD5</th>
+      <td align="center">{{ fa.md5 }}</td>
+    </tr>
+    {% endif %}
+    {%endif %}
+    <!--  FILE END -->
+
+    {% if fa.filecontentrules_set.all %}
+      <tr>
+        <th>Content</th>
+        <td>
+          <ul>
+            {% for content in fa.filecontentrules_set.all %}
+            <li>{{ content.rule }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    {% endif %}
+    
+  {% endfor %}
+
+<!--  FILE/FOLDER END -->
+
+{% else %}
+{% if  metaagent.type == "ProcessAgent" %}
+<!--  PROCESS START -->
+  {% for pa in metaagent.processagent_set.all %}
+
+    <tr>
+      <th>Processus</th>
+      <td align="center">{{ pa.procname }}</td>
+    </tr>
+
+    {% if pa.user %}
+    <tr>
+      <th>User</th>
+      <td align="center">{{ pa.user }}</td>
+    </tr>
+    {% endif %}
+
+    {% if pa.multiplicity %}
+    <tr>
+      <th>Multiplicity</th>
+      <td align="center">{{ pa.multiplicity }}</td>
+    </tr>
+    {% endif %}
+
+    {% if pa.command %}
+    <tr>
+      <th>Command</th>
+      <td align="center">{{ pa.command }}</td>
+    </tr>
+    {% endif %}
+
+    {% if pa.service %}
+    <tr>
+      <th>Service</th>
+      <td align="center">{{ pa.service }}</td>
+    </tr>
+    {% endif %}
+
+    {% if pa.maxCpu %}
+    <tr>
+      <th>Max CPU</th>
+      <td align="center">{{ pa.maxCpu }}</td>
+    </tr>
+    {% endif %}
+
+    {% if pa.maxMemory %}
+    <tr>
+      <th>Max Memory</th>
+      <td align="center">{{ pa.maxMemory }}</td>
+    </tr>
+    {% endif %}
+
+    {% if pa.id_parent %}
+    <tr>
+      <th>Parent process</th>
+      <td align="center"><a href="{% url 'metaAgent_detail' pa.id_parent.id_metaagent.id %}">{{ pa.id_parent.id_metaagent.name }}</a></td>
+    </tr>
+    {% endif %}
+
+    {% if pa.processagent_set.all %}
+      <tr>
+        <th>Children process</th>
+        <td>
+          <ul>
+            {% for child in pa.processagent_set.all %}
+            <li><a href="{% url 'metaAgent_detail' child.id_metaagent.id %}">{{ child.id_metaagent.name }}</a></li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if pa.processlimits_set.all %}
+      <tr>
+        <th>Custom limits</th>
+        <td>
+          <ul>
+            {% for lim in pa.processlimits_set.all %}
+            <li>{{ lim.id_limit.name }} : {{ lim.value }}</li>
+          {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if pa.id_procenvfile %}
+    <tr>
+      <th>Environment File</th>
+      <td align="center"><a href="{% url 'metaAgent_detail' pa.id_procenvfile.id_metaagent.id %}">{{ pa.id_procenvfile.id_metaagent.name }}</a></td>
+    </tr>
+    {% endif %}
+
+  {% endfor %}
+
+{% else %}
+<!--  ENVIRONMENT START -->
+{% if  metaagent.type == "EnvironmentAgent" %}
+  {% for ea in metaagent.environmentagent_set.all %}
+  
+    {% if ea.id_fstab %}
+    <tr>
+      <th>Fstab File</th>
+      <td align="center"><a href="{% url 'metaAgent_detail' ea.id_fstab.id_metaagent.id %}">{{ ea.id_fstab.id_metaagent.name }}</a></td>
+    </tr>
+    {% endif %}
+
+    {% if ea.maxLoad %}
+    <tr>
+      <th>Max Load</th>
+      <td align="center">{{ ea.maxLoad }}</td>
+    </tr>
+    {% endif %}
+
+    {% if ea.maxMemory %}
+    <tr>
+      <th>Max Memory</th>
+      <td align="center">{{ ea.maxMemory }}</td>
+    </tr>
+    {% endif %}
+
+    {% if ea.maxSwap %}
+    <tr>
+      <th>Max Swap</th>
+      <td align="center">{{ ea.maxSwap }}</td>
+    </tr>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+<!--  ENVIRONMENT END -->
+{% endif %}
+<!--  PROCESS END -->
+{% endif %}
+<!--  FILE/FOLDER END -->
+
+
+{% endif %}
+<!-- COORDINATOR END -->
+</table>
+
+{% if metaagent.type == "Coordinator" %}
+{% if metaagent.dependency_after.all %}
+</p>
+<h3 class="title">Needs</h2>
+<table border="1">
+  <tr>
+    <th>Coordinator</th>
+    <th>Occurrence</th>
+    <th>Validity</th>
+  </tr>
+  {% for dependency in metaagent.dependency_after.all %}
+   <tr>
+     <td><a href="{% url 'metaAgent_detail' dependency.id_prior.id %}">{{ dependency.id_prior.name }}</a></td>
+     <td align=center>{{ dependency.occurrence }}</td>
+     {% if dependency.validity %}
+     <td>Yes (change)</td>
+     {% else %}
+     <td>No (change)</td>
+     {% endif %}
+   </tr>
+   {% endfor %}
+</table>
+{% endif %}
+
+
+{% if metaagent.dependency_prior.all %}
+</p>
+<h3 class="title">Is needed by</h2>
+<table border="1">
+  <tr>
+    <th>Coordinator</th>
+    <th>Occurrence</th>
+    <th>Validity</th>
+  </tr>
+  {% for dependency in metaagent.dependency_prior.all %}
+   <tr>
+     <td><a href="{% url 'metaAgent_detail' dependency.id_after.id %}">{{ dependency.id_after.name }}</a></td>
+     <td align=center>{{ dependency.occurrence }}</td>
+     {% if dependency.validity %}
+     <td>Yes (change)</td>
+     {% else %}
+     <td>No (change)</td>
+     {% endif %}
+   </tr>
+   {% endfor %}
+</table>
+{% endif %}
+
+{% else %}
+
+{% if metaagent.recoveryrule_ma1.all %}
+</p>
+<h3 class="title">Triggers</h2>
+<table border="1">
+  <tr>
+    <th>When</th>
+    <th>My Action</th>
+    <th>Target</th>
+    <th>Remote Action</th>
+  </tr>
+  {% for rule in metaagent.recoveryrule_ma1.all %}
+   <tr>
+     <td>{{ rule.direction }}</td>
+     <td>{{ rule.action1|lower }}</td>
+     <td><a href="{% url 'metaAgent_detail' rule.id_ma2.id %}">{{ rule.id_ma2.name }}</a></td>
+     <td>{{ rule.action2|lower }}</td>
+   </tr>
+   {% endfor %}
+</table>
+
+{% endif %}
+
+{% if metaagent.recoveryrule_ma2.all %}
+</p>
+<h3 class="title">Triggers on me</h2>
+<table border="1">
+  <tr>
+    <th>Action</th>
+    <th>When</th>
+    <th>Source</th>
+    <th>Remote Action</th>
+  </tr>
+  {% for rule in metaagent.recoveryrule_ma2.all %}
+   <tr>
+     <td>{{ rule.action2|lower }}</td>
+     <td>{{ rule.direction }}</td>
+     <td><a href="{% url 'metaAgent_detail' rule.id_ma1.id %}">{{ rule.id_ma1.name }}</a></td>
+     <td>{{ rule.action1|lower }}</td>
+   </tr>
+   {% endfor %}
+</table>
+
+{% endif %}
+
+{% endif %}
+
+
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <h3>type</h3>
+  <p>Type of the metaAgent</p>
+</li>
+<li>
+  <h3>Valid</h3>
+  <p>0 if it is Abstract, 1 otherwise</p>
+</li>
+<li>
+  <h3>Parent</h3>
+  <p>The Coordinator to which it is attached</p>
+</li>
+{% if metaagent.type == "Coordinator" %}
+<li>
+  <h3>Shared Total</h3>
+  <p>The total amount of time we experienced a problem on an entity from the same family (inheritance)</p>
+</li>
+<li>
+  <h3>Local Total</h3>
+  <p>The total amount of time we experienced a problem on that particular entity</p>
+</li>
+<li>
+  <h3>Tolerate</h3>
+  <p>How many children can be faulty witout the Coordinator is considered faulty</p>
+</li>
+<li>
+  <h3>Children</h3>
+  <p>List of children of the Coordinator</p>
+</li>
+<li>
+  <h3>Needs</h3>
+  <p>What the Coordinator needs to be working to work</p>
+</li>
+<li>
+  <h3>Is needed by</h3>
+  <p>Which Coordinators needs this one to work</p>
+</li>
+{% else %}
+<li>
+  <h3>Server</h3>
+  <p>Server on which the entity is running</p>
+</li>
+<li>
+  <h3>Triggers</h3>
+  <p>Which action on that Agent triggers a reaction</p>
+</li>
+<li>
+  <h3>Triggers on me</h3>
+  <p>Which action on other Agent triggers a reaction on that Agent</p>
+</li>
+{% if  metaagent.type == "FileAgent" or metaagent.type == "FolderAgent" %}
+<li>
+  <h3>Filename</h3>
+  <p>Path of the file</p>
+</li>
+<li>
+  <h3>Owner</h3>
+  <p>Owner of the file</p>
+</li>
+<li>
+  <h3>Group</h3>
+  <p>Group of the file</p>
+</li>
+<li>
+  <h3>Permissions</h3>
+  <p>Permissions of the file (in 3 octals)</p>
+</li>
+<li>
+  <h3>Attributes</h3>
+  <p>Linux attributes of the file</p>
+</li>
+{% if metaagent.type == "FileAgent" %}
+<li>
+  <h3>MD5</h3>
+  <p>md5 checksum of the file</p>
+</li>
+<li>
+  <h3>Content</h3>
+  <p>Regex that the file content should match</p>
+</li>
+{% endif %}
+<li>
+{% else %}
+{% if  metaagent.type == "ProcessAgent" %}
+  <h3>Processus</h3>
+  <p>Full processus line as visible in ps</p>
+</li>
+<li>
+  <h3>User</h3>
+  <p>User running the process</p>
+</li>
+<li>
+  <h3>Multiplicity</h3>
+  <p>Amount of children processes allowed to have</p>
+</li>
+<li>
+  <h3>Command</h3>
+  <p>Command used to start the process</p>
+</li>
+<li>
+  <h3>Service</h3>
+  <p>Linux Service to which the process is associated </p>
+</li>
+<li>
+  <h3>Max CPU</h3>
+  <p>Maximum CPU the process is allowed to take</p>
+</li>
+<li>
+  <h3>Max Memory</h3>
+  <p>Maximum memory the process is allowed to take</p>
+</li>
+<li>
+  <h3>Parent process</h3>
+  <p>Link to the parent process entity</p>
+</li>
+<li>
+  <h3>Children process</h3>
+  <p>Link to the children process entities</p>
+</li>
+<li>
+  <h3>Custom limits</h3>
+  <p>System limits that differ from the standard</p>
+</li>
+<li>
+  <h3>Environment File</h3>
+  <p>Link to the file entity treating the environment file</p>
+</li>
+{% else %}
+{% if  metaagent.type == "EnvironmentAgent" %}
+<li>
+  <h3>Fstab File</h3>
+  <p>Link to the file entity treating the fstab file</p>
+</li>
+<li>
+  <h3>Max Load</h3>
+  <p>Maximum load allowed on the server</p>
+</li>
+<li>
+  <h3>Max Memory</h3>
+  <p>Maximum memory consumption allowed on the server</p>
+</li>
+<li>
+  <h3>Max Swap</h3>
+  <p>Maximum swap allowed to the server</p>
+</li>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

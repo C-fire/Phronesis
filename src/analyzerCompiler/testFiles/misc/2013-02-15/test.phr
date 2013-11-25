@@ -1,0 +1,19 @@
+Server localhost {
+    address -> localhost;
+}
+
+FileAgent f1 {
+    filename -> /tmp/f1;
+    server -> localhost;
+    owner -> root;
+}
+
+FileAgent f2{
+    filename -> /tmp/f2;
+    server -> localhost;
+}
+
+Coordinator Coord {
+    needs FileAgent f1 = f1;
+    needs FileAgent f2 = f2;
+}

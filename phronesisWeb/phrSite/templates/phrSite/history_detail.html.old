@@ -1,0 +1,82 @@
+THIS IS NOW DEPRECATED
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">{{ recoveryhistory.date }} : {{ recoveryhistory.time }}</h2>
+<p class="meta">All the information stored in the database</p>
+<div class="entry">
+
+
+
+<table border="1">
+<tr>
+  <th>Responsible</th>
+  <td align="center">{{ recoveryhistory.responsible }}</td>
+</tr>
+<tr>
+  <th>User Entry</th>
+  <td align="center">{{ recoveryhistory.userEntry }}</td>
+</tr>
+<tr>
+  <th>Actions</th>
+  <td>
+    <ul>
+      {% for act in recoveryhistory.recoveryhistoryaction_set.all %}
+        <li>{{ act.action }} on <a href="{% url 'search' %}?q={{act.metaagent}}">{{ act.metaagent }}</a></li>
+    {% endfor %}
+    </ul>
+  </td>
+</tr>
+
+<tr>
+  <th>Problems Before</th>
+  <td>
+    <ul>
+      {% for pb in recoveryhistory.recoveryhistoryproblem_set.all %}
+      {% if pb.before_after == "before" %}
+        <li><a href="{% url 'search' %}?q={{pb.metaagent}}">{{ pb.metaagent }}</a></li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  </td>
+</tr>
+
+<tr>
+  <th>Problems After</th>
+  <td>
+    <ul>
+      {% for pb in recoveryhistory.recoveryhistoryproblem_set.all %}
+      {% if pb.before_after == "after" %}
+        <li><a href="{% url 'search' %}?q={{pb.metaagent}}">{{ pb.metaagent }}</a></li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  </td>
+</tr>
+
+</table>
+
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <h3>Responsible</h3>
+  <p>Entity we have diagnosed as responsible for troubles</p>
+</li>
+<li>
+  <h3>User Entry</h3>
+  <p>Message from the person that solved the problem</p>
+</li>
+<li>
+  <h3>Actions</h3>
+  <p>List of actions undertook to solve the problem</p>
+</li>
+<li>
+  <h3>Problems Before</h3>
+  <p>List of problems notified before we undertake any action</p>
+</li>
+<li>
+  <h3>Problems After</h3>
+  <p>List of problems notified after we undertook actions</p>
+</li>
+{% endblock %}

@@ -1,0 +1,17 @@
+Server test{
+    address -> dadada;
+    ignoreFS -> /sw;
+    ignoreFS -> /daq/da;
+}
+
+Server normal{
+    address -> normal;
+}
+
+FileAgent a{
+    filename ->da;
+    server -> test;
+}
+Coordinator testC{
+    needs FileAgent ad = a;
+}

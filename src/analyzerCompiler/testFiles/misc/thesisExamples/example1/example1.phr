@@ -1,0 +1,148 @@
+# We start by defining a completely abstract website
+# which is made of an httpd process (with one child),
+# and 2 coordinators : one for the data and one for the 
+# configuration
+
+
+# This ProcessAgent is the definition of a standard 
+# httpd root process : the binary is /usr/sbin/httpd
+# and should be run as root. It is started with
+# a standard linux process called "httpd". There should only
+# be 1 instance of this process. 
+# Eventhough this is not very standard, we have defined 
+# two constraints on our process : it should have an 
+# environment variable ORACLE_LIB whose value is
+# /usr/lib/oracle/, and the maximum number of file
+# descriptors is 2000.
+# The server on which it runs is a variable called $webSrv 
+# to be defined later
+ProcessAgent abs_httpd {
+    procName -> /usr/sbin/httpd;
+    multiplicity -> 1;
+    user -> root;
+    service -> httpd;
+    server -> $webSrv;
+    envVar -> ORACLE_LIB=/usr/lib/oracle/;
+    open_files -> 2000;
+}
+
+# The httpd process has one root process (abs_httd)
+# and then forks off a lot. This ProcessAgent describes 
+# the children. Because we define abs_httpd as the parent
+# process, abs_httpdChild will have all the attributes 
+# of its parent (procName, multiplicity, user, service, server
+# envVar and open_files). However, we overwrite two of those
+# attributes : the multiplicity (a maximum number of children
+# processes can actually be set in the real httpd configuration files)
+# and the user, which is set to a variable $webUser
+ProcessAgent abs_httdpChild {
+    parent -> abs_httpd;
+    multiplicity -> 100;
+    user -> $webUser;
+}
+
+# We define a Coordinator to represents the webSite.
+# It has three needs, out of which only one is assigned
+# to abs_httpd.
+Coordinator abs_webSite {
+    needs Coordinator n_c_data;
+    needs Coordinator n_c_conf;
+    needs ProcessAgent n_p_httpd = abs_httpd;
+}
+
+# We can now define a default website
+
+# The Coordinator where the data are stored
+# is composed by only one folder.
+
+FolderAgent default_documentRoot {
+    filename -> /var/www/html;
+    server -> $webSrv;
+}
+
+Coordinator default_Data {
+    needs FolderAgent n_fo_data = default_documentRoot;
+}
+
+# The Coordinator that contains the configuration
+# is composed by only one file
+
+# We expect the file to contain a line with "DocumentRoot"
+# as well as a line containing "Listen 80"
+FileAgent default_httpdConf {
+    filename -> /etc/httpd/conf/httpd.conf;
+    owner -> root;
+    grp -> root;
+    content -> Listen 80;
+    content -> DocumentRoot;
+    server -> $webSrv;
+}
+
+Coordinator default_Conf {
+    needs FileAgent n_fi_conf = default_httpdConf;
+}
+
+
+# default_website inherits from abs_webSite.
+# This means that default_webSite has 3 needs :
+#  - one ProcessAgent, which is already assigned to a copy of the abs_httpChild
+#  - two Coordinators, non assigned yet
+# We assign the Coordinators previously defined to our two needs.
+# We assign a value to the $webUser variable : this assignation is 
+# propagated in all the tree, so it will reach the copy of abs_httpdChild.
+Coordinator default_webSite : abs_webSite {
+    n_c_data = default_Data;
+    n_c_conf = default_Conf;
+    set $webUser apache;
+}
+
+# We need to define servers on which to run 
+
+# First, we define an abstract Server, a model
+# for all the webserver : 
+# It will have 2 montpoints, and two file system have 
+# to be ignored. Also, we override the default maxLoad
+# to a value of 9.
+
+Server abs_srv {
+    mountpoint -> nfs:/nfsexports/sharedFiles /sharedFiles nfs rw,hard,intr,nolock 0 0;
+    mountpoint -> nfs:/nfsexports/otherFiles /otherFiles nfs rw,hard,intr 0 0;
+    ignoreFs -> /castorfs;
+    ignoreFs -> /cvmfs;
+    maxLoad -> 9;
+}
+
+
+# Because srv1 inherits from abs_server,
+# it will have all the caracteristic from abs_server,
+# and its address is 192.168.0.50
+Server srv1 : abs_srv {
+    address -> 192.168.0.50;
+}
+
+# Because srv2 inherits from abs_server,
+# it will have all the caracteristic from abs_server,
+# except the maxLoad which is redefined to 6.
+# Its address is 192.168.0.51 
+Server srv2 : abs_srv{
+    address -> 192.168.0.51;
+    maxLoad -> 6;
+}
+
+
+# Site1 inherits from default_website
+# This will create 2 Coordinators :
+#   - one containing a newly created FolderAgent, for the data
+#   - one containing a newly created FileAgent, for the configuration
+# It will also create 2 ProcessAgents to represent the http process.
+# The only unknown left is the server on which to run, which is assigned
+# with a simple line. (The value of $webUser is apache since Site1 
+# inherits from default_webSite)
+Coordinator Site1 : default_webSite {
+    set $webSrv srv1;
+}
+
+# As for Site1
+Coordinator Site2 : default_webSite {
+    set $webSrv srv2;
+}

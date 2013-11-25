@@ -1,0 +1,12 @@
+PhronesisAgent.o: PhronesisAgent.cpp PhronesisAgent.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/Configuration.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/connection.hpp \
+ Treatment.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/Message.hpp
+queryCLI.o: queryCLI.cpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/Client.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/Message.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/connection.hpp
+Treatment.o: Treatment.cpp Treatment.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/Message.hpp \
+ /home/chaen/phronesis-to-git-boost-1.53/src/analyzerLib/connection.hpp

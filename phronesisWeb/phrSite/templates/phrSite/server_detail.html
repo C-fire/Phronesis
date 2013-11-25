@@ -1,0 +1,55 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">{{ server.name }}</h2>
+<p class="meta">All the information stored in the database</p>
+<div class="entry">
+
+<table border="1">
+<tr>
+  <th>Address</th>
+  <td align="center">{{ server.address }}</td>
+</tr>
+<tr>
+  <th>Failures</th>
+  <td align="center">{{ server.occurrence }}</td>
+</tr>
+<tr>
+  <th>Environment</th>
+  {% for ma in server.metaagent_set.all %}
+    {% if ma.type == "EnvironmentAgent" %}
+      <td align="center"><a href="{% url 'metaAgent_detail' ma.id %}">{{ ma.name }} </a></td>
+    {% endif %}
+  {% endfor %}
+</tr>
+<tr>
+  <th>Agents on it</th>
+   <td align="center">
+   <ul>
+  {% for ma in server.metaagent_set.all %}
+      <li><a href="{% url 'metaAgent_detail' ma.id %}">{{ ma.name }} </a></li>
+  {% endfor %}
+  </ul>
+  </td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <h3>Address</h3>
+  <p>The network address of the server</p>
+</li>
+<li>
+  <h3>Failures</h3>
+  <p>Amount of time the server was down</p>
+</li>
+<li>
+  <h3>Environment</h3>
+  <p>Link to the environment agent associated with the server</p>
+</li>
+<li>
+  <h3>Agents on it</h3>
+  <p>List of agents that are running on this server</p>
+</li>
+{% endblock %}

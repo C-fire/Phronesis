@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PhronesisWeb</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css" media="screen" />
+{% block scripts %} {% endblock %}
+</head>
+<body>
+<div id="wrapper">
+	<div id="logo">
+		<h1><a href="/phrSite/">Phronesis Web </a></h1>
+		<p><em> template design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></em></p>
+	</div>
+	<hr />
+	<!-- end #logo -->
+	<div id="header">
+		<div id="menu">
+			<ul>
+				<li><a href="{% url 'metaAgent' %}" class="first">MetaAgents</a></li>
+				<li><a href="{% url 'metaAgentTree' %}" class="first">MetaAgentTree</a></li>
+				<!--<li class="current_page_item"><a href="{% url 'server' %}">Servers</a></li>-->
+				<li><a href="{% url 'server' %}">Servers</a></li>
+				<li><a href="{% url 'dependency' %}">Dependencies</a></li>
+				<li><a href="{% url 'trigger' %}">Triggers</a></li>
+				<li><a href="{% url 'history' %}">History</a></li>
+				<li><a href="{% url 'console' %}">Console</a></li>
+			</ul>
+		</div>
+		<!-- end #menu -->
+		<div id="search">
+			<form method="get" action="{% url 'search' %}">
+				<fieldset>
+				<input type="text" name="q" id="q" size="20" />
+				<input type="submit" id="search-submit" value="GO" />
+				</fieldset>
+			</form>
+		</div>
+		<!-- end #search -->
+	</div>
+	<!-- end #header -->
+	<!-- end #header-wrapper -->
+	<div id="page">
+	<div id="page-bgtop">
+		<div id="content">
+                        <div class="post">
+                        {% block content %}{% endblock %}
+                        </div> 
+		</div>
+		<!-- end #content -->
+		<div id="sidebar">
+                <h1>Help</h1>
+			<ul>
+                        {% block help %} {% endblock %}
+			</ul>
+		</div>
+		<!-- end #sidebar -->
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	</div>
+	<!-- end #page -->
+	<div id="footer-bgcontent">
+	<div id="footer">
+		<p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
+	</div>
+	</div>
+	<!-- end #footer -->
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+Server NfsSrv {
+	address -> devexpert02;
+}
+
+Server WebSrv01 {
+	address -> devexpert03;
+}
+
+Server WebSrv02 {
+	address -> devexpert04;
+}
+
+Server MetaServer {
+	cpu -> 10;
+}
+
+Server inst : MetaServer{
+	address ->192.168.1.1;
+}
+

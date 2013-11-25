@@ -1,0 +1,20 @@
+ProcessAgent abs_nfsd{
+        server -> $nfsSrv;
+        procName -> *nfsd;
+        user -> root;
+        service -> nfs;
+}
+
+
+FileAgent abs_exportFile{
+        server -> $nfsSrv;
+        filename -> /etc/exports;
+        after ANY trigger PROCESS_RESTART on abs_nfsd;
+}
+
+Coordinator abs_Nfs{
+        needs ProcessAgent n_p_nfsd = abs_nfsd;
+        needs FileAgent n_fi_exportFile = abs_exportFile;
+        needs Coordinator n_c_exportedFolders;
+}
+

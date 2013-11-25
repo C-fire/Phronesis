@@ -1,0 +1,16 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">Server list</h2>
+<p class="meta"> All the Servers defined in the database</p>
+<div class="entry">
+{% if server_list %}
+    <ul>
+    {% for se in server_list %}
+      <li><a href="{% url 'server_detail' se.id %}">{{ se.name}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No Server defined.</p>
+{% endif %}
+</div>
+{% endblock %}

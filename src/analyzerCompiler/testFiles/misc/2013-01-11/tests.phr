@@ -1,0 +1,21 @@
+Server localhost{
+	address -> localhost;
+}
+FileAgent f {
+	server -> localhost;
+	filename -> /dadada;
+}
+
+Coordinator sub {
+}
+
+Coordinator top1{
+    needs Coordinator s = sub;
+    needs FileAgent f = f;
+}
+
+
+Coordinator top2{
+    needs Coordinator s = sub;
+    needs FileAgent f = f;
+}

@@ -1,0 +1,19 @@
+Server localhost {
+    address -> localhost;
+}
+
+
+
+FolderAgent fo {
+    filename -> /tmp/testFolder;
+    content -> Il etait un .* navire$;
+    nameFilter -> .*\.txt;
+    nameFilter -> test.*;
+    server -> localhost;
+}
+
+Coordinator myTest {
+    needs FolderAgent f = fo;
+}
+
+

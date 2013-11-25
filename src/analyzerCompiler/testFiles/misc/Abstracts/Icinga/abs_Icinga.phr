@@ -1,0 +1,81 @@
+FileAgent abs_icingaCfgFile {
+    filename -> $icingaCfgFileFn;
+    owner -> root;
+    permissions -> 664;
+    server -> $icingaSrv;
+    after ANY trigger PROCESS_RESTART on abs_icingaProc;
+}
+ 
+ProcessAgent abs_icingaProc{
+    procName -> $icingaProcName;
+    user -> $icingaUser;
+    service -> icinga;
+    server -> $icingaSrv;
+}
+
+FolderAgent abs_icingaObjects{
+    filename -> $icingaObjectsFn;
+    server -> $icingaSrv;
+    after ANY trigger PROCESS_RESTART on abs_icingaProc;
+}
+
+FileAgent abs_icingaStatusFile {
+    filename -> $icingaStatusFileFn;
+    server -> $icingaSrv;
+    owner -> $icingaUser;
+    permissions -> 644;
+}
+
+FileAgent abs_icingaRetentionFile {
+    filename -> $icingaRetentionFileFn;
+    server -> $icingaSrv;
+    owner -> $icingaUser;
+    permissions -> 600;
+}
+
+FileAgent abs_icingaCmdFile {
+    filename -> $icingaCmdFileFn;
+    server -> $icingaSrv;
+    owner -> $icingaUser;
+    permissions -> 777;
+}
+
+Coordinator abs_icingaRuntime {
+    needs FileAgent n_fi_status = abs_icingaStatusFile;
+    needs FileAgent n_fi_retention = abs_icingaRetentionFile;
+    needs FileAgent n_fi_cmd = abs_icingaCmdFile;
+}
+
+FolderAgent abs_icingaPluginFolder {
+    filename -> $icingaPluginFolder;
+    server -> $icingaSrv;
+    owner -> root;
+    permissions -> 755;
+}
+
+Coordinator abs_icingaPlugins {
+    needs FolderAgent n_fo_plugins = abs_icingaPluginFolder;
+}
+
+
+Coordinator abs_icinga {
+        needs Coordinator n_co_runtime = abs_icingaRuntime;
+        needs FileAgent n_fi_cfg = abs_icingaCfgFile;
+        needs ProcessAgent n_p_icinga = abs_icingaProc;
+        needs FolderAgent n_fo_objects = abs_icingaObjects;
+        needs Coordinator n_co_plugins = abs_icingaPlugins;
+}
+
+Coordinator default_icinga_rpm : abs_icinga {
+    set $icingaCfgFileFn /etc/icinga/icinga.cfg;
+    set $icingaProcName /usr/bin/icinga;
+    set $icingaUser icinga;
+    set $icingaObjectsFn /etc/icinga/objects/;
+    set $icingaStatusFileFn /var/icinga/status.dat;
+    set $icingaRetentionFileFn /var/icinga/retention.dat;
+    set $icingaCmdFileFn /var/icinga/cmd/icinga.cmd;
+    set $icingaPluginFolder /usr/lib64/nagios/plugins;
+
+}
+
+

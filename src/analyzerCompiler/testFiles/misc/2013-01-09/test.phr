@@ -1,0 +1,44 @@
+Server localhost {
+	address -> localhost;
+}
+
+FileAgent a{
+	filename -> /tmp/bonjour.jpg;
+	server -> localhost;
+}
+
+ProcessAgent b{
+	procName -> whoCares;
+	server -> localhost;
+	maxCpu -> 101;
+	maxMemory -> 200;
+}
+
+Coordinator A{
+	needs FileAgent f = a;
+}
+
+Coordinator B{
+	needs FileAgent f = a;
+}
+
+Coordinator C{
+	requires A;
+	requires B;
+	needs FileAgent f = a;
+}
+
+Coordinator D{
+	needs ProcessAgent p = b;
+}
+
+FolderAgent confFolder{
+    server -> localhost;
+    filename -> /tmp/testFolder/;
+    owner -> chaen;
+    after ANY trigger PROCESS_RESTART on b;
+}
+ 
+Coordinator confCoord{
+    needs FolderAgent f = confFolder;
+}

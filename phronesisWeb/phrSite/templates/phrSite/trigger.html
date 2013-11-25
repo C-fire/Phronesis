@@ -1,0 +1,36 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">Trigger list</h2>
+<p class="meta"> All the reactions triggered by another action on Agents</p>
+<div class="entry">
+{% if trigger_list %}
+    <table border="1">
+    <tr>
+        <th>On</th>
+        <th>Action</th>
+        <th>Triggers</th>
+        <th>Target</th>
+        <th>When</th>
+    </tr>
+  {% for trigger in trigger_list %}
+   <tr>
+     <td><a href="{% url 'metaAgent_detail' trigger.id_ma1.id %}">{{ trigger.id_ma1.name }}</a></td>
+     <td>{{ trigger.action1|lower }}</td>
+     <td>{{ trigger.action2|lower }}</td>
+     <td><a href="{% url 'metaAgent_detail' trigger.id_ma2.id %}">{{ trigger.id_ma2.name }}</a></td>
+     <td>{{ trigger.direction }}</td>
+   </tr>
+   {% endfor %}
+    </table>
+{% else %}
+    <p>No Trigger is available.</p>
+{% endif %}
+
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <p>This page lists all the Dependencies between Coordinators.</p>
+</li>
+{% endblock %}

@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# phronesisXmlClientd        Startup script for the Gearman server
+#
+# chkconfig: - 85 15
+# description: phronesisXmlClientd is the core component of Phronesis.
+# processname: phronesisXmlClientd
+# config: /etc/sysconfig/phronesisXmlClientd
+# pidfile: /var/run/phronesisXmlClientd/phronesisXmlClientd.pid
+#
+### BEGIN INIT INFO
+# Provides: phronesisXmlClientd
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $network
+# Default-Start:
+# Default-Stop:
+# Short-Description: start and stop the Phronesis Core
+# Description: Phronesis Core
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+
+if [ -f /etc/sysconfig/phronesisXmlClientd ]; then
+        . /etc/sysconfig/phronesisXmlClientd
+fi
+
+[ -z "${PIDFILE}" ] && pidfile="/var/run/phronesisXmlClientd.pid"
+[ -z "${LOCKFILE}" ] && lockfile="/var/lock/subsys/phronesisXmlClientd"
+
+#phronesisXmlClientd=/usr/bin/phronesisXmlClientd
+outputFile=/var/www/html/phronesisWeb/phrSite/static/scripts/demo_test.xml
+phronesisServer=localhost
+phronesisXmlClientd=/home/chaen/phronesis/bin/phronesisXmlClient
+prog=phronesisXmlClientd
+
+RETVAL=0
+
+start() {
+        echo -n $"Starting $prog: "
+        daemon --pidfile=$pidfile --user=root $phronesisXmlClientd -o $outputFile -s $phronesisServer -d 
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && (touch $lockfile; pgrep -f $phronesisXmlClientd > $pidfile)
+        return $RETVAL
+}
+
+stop() {
+	echo -n $"Stopping $prog: "
+	killproc -p $pidfile $phronesisXmlClientd
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f $lockfile $pidfile
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status -p $pidfile $phronesisXmlClientd
+	RETVAL=$?
+	;;
+  restart|reload)
+	stop
+	start
+	;;
+  condrestart|try-restart)
+	if status -p $pidfile $phronesisXmlClientd >&/dev/null; then
+		stop
+		start
+	fi
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|reload|condrestart|status|help}"
+	RETVAL=3
+esac
+
+exit $RETVAL
+

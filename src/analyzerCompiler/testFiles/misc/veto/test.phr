@@ -1,0 +1,27 @@
+Server localhost {
+    address -> localhost;
+}
+
+
+FileAgent fa {
+    filename -> dada;
+    server -> localhost;
+}
+
+Coordinator A{
+    veto x;
+}
+
+Coordinator X {
+}
+
+
+Coordinator C {
+    veto u;
+    needs FileAgent a = fa;
+}
+
+Coordinator B : A{
+    veto y_y;
+    needs Coordinator c = C;
+}

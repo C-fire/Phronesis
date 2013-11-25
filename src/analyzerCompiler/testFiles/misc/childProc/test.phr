@@ -1,0 +1,15 @@
+Server localhost {
+    address -> localhost;
+}
+
+ProcessAgent parentAbs {
+    procName -> dada;
+    server -> localhost;
+}
+
+ProcessAgent childAbs{
+    parent-> parentAbs;
+}
+
+ProcessAgent realParent : parentAbs {
+}

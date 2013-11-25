@@ -1,0 +1,8 @@
+Server localhost{
+  address -> localhost;
+}
+
+FileAgent test{
+  server -> localhost;
+  content -> DIM_DNS_NODE=hlta09;
+}

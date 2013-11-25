@@ -1,0 +1,63 @@
+FolderAgent apache_folder{
+    owner -> $apache_user;
+    server -> $apache_server;
+}
+
+FileAgent apache_file{ 
+    owner -> $apache_user;
+    server -> $apache_server;
+}
+
+
+ProcessAgent apache_httpd{
+    procName -> /usr/bin/httpd;
+    user -> root;
+    server -> $apache_server;
+}
+
+ProcessAgent apache_httpdChild{
+   parent -> apache_httpd;
+   user -> $apache_user;
+   server -> $apache_server;
+}
+
+Coordinator apache_site {
+    needs Coordinator n_data;
+    needs Coordinator n_configuration;
+    needs ProcessAgent n_httpd = apache_httpd;
+}
+
+
+
+FolderAgent mySite_conf_folder : apache_folder{
+    filename -> /etc/httpd/conf.d;
+    owner -> root;
+}
+
+Coordinator mySite_configuration{
+    needs FolderAgent n_folder = mySite_conf_folder;
+}
+
+FileAgent mySite_data_file : apache_file {
+        user -> $mySite_user;
+        filename -> /etc/httpd/conf.d;
+}
+
+Coordinator mySite_data {
+    needs FileAgent n_file = mySite_data_file;
+}
+
+Server localhost {
+    address -> localhost;
+}
+
+Coordinator MySite : apache_site{
+    n_data = mySite_data;
+    n_configuration = mySite_configuration;
+    set $apache_server localhost;
+    set $apache_user apache;
+    set $mySite_user mySiteUser;
+}
+
+
+

@@ -1,0 +1,25 @@
+Server localhost {
+    address -> localhost;
+}
+
+FileAgent IwannaBe {
+    filename -> IwannaBe;
+    server -> localhost;
+}
+
+FileAgent TheGuy{
+    filename -> TheGuy;
+    server -> localhost;
+}
+
+Coordinator Papy {
+    needs FileAgent I = IwannaBe;
+    needs FileAgent T = TheGuy;
+}
+
+Coordinator Papa : Papy {
+}
+
+Coordinator Son : Papa {
+}
+

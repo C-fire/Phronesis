@@ -1,0 +1,91 @@
+import MySQL/abs_MySQL.phr;
+import Http/abs_http.phr;
+import Nfs/abs_Nfs.phr;
+import Icinga/abs_Icinga.phr;
+import Icinga/abs_Gearman.phr
+import Icinga/abs_idoutils.phr
+
+Server localhost {
+    address -> localhost;
+}
+
+Coordinator example_MySQL : default_MySql {
+    set $mysqlSrv localhost;
+}
+
+Coordinator example_webSite : default_webSite {
+    set $webSrv localhost;
+}
+
+
+FileAgent example_spe_ConfFile {
+    filename -> /etc/httpd/conf.d/myConf.cfg;
+    server -> $webSrv;
+}
+
+Coordinator example_spe_Conf : default_Conf {
+    needs FileAgent n_fi_spe = example_spe_ConfFile;
+}
+
+Coordinator example_spe_webSite : default_webSite {
+    n_c_conf = example_spe_Conf;
+    set $webSrv localhost;
+}
+
+
+FolderAgent exportedFolder1 {
+    filename -> folder1;
+    server -> $nfsSrv;
+}
+
+FolderAgent exportedFolder2 {
+    filename -> folder2;
+    server -> $nfsSrv;
+}
+ 
+
+Coordinator exportedNfsFolders {
+    needs FolderAgent n_fo_exported1 = exportedFolder1;
+    needs FolderAgent n_fo_exported2 = exportedFolder2;
+}
+
+Coordinator example_Nfs : abs_Nfs {
+    n_c_exportedFolders = exportedNfsFolders;
+    set $nfsSrv localhost;
+}
+
+
+Coordinator example_icinga_rpm : default_icinga_rpm {
+    set $icingaSrv localhost;
+}
+
+
+Coordinator example_gearmanServer : default_gearmanServer{
+    set $gearmanSrv localhost;
+}
+
+Coordinator example_gearmanWorker1 : default_gearmanWorker {
+    set $gearmanWorkerSrv localhost;
+}
+
+
+Coordinator example_gearmanWorker2 : default_gearmanWorker {
+    set $gearmanWorkerSrv localhost;
+}
+
+Coordinator example_allGearmanWorkers {
+    needs n_c_worker1 = example_gearmanWorker1;
+    needs n_c_worker2 = example_gearmanWorker2;
+}
+
+Coordinator example_gearman : abs_gearman {
+    n_c_gearmanServer = example_gearmanServer;
+    n_c_allGearmanWorkers = example_allGearmanWorkers;
+}
+
+
+Coordinator example_idoutils : default_idoutils {
+    set $ido2dbSrv localhost;
+    set $icingaSrv localhost;
+    set $icingaProc abs_icingaProc_example_icinga_rpm;
+}

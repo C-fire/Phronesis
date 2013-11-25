@@ -1,0 +1,40 @@
+ProcessAgent abs_mysqld{
+        server -> $mysqlSrv;
+        procName -> /usr/bin/mysqld_safe;
+        user -> root;
+        service -> mysqld;
+}
+
+ProcessAgent abs_mysqldChild{
+        parent -> abs_mysqld;
+        procName -> /usr/libexec/mysqld;
+        user -> $mysqlUser;
+}
+
+
+FileAgent abs_myCnfFile{
+        server -> $mysqlSrv;
+        filename -> $myCnfFile;;
+        after ANY trigger PROCESS_RESTART on abs_mysqld;
+
+}
+
+FolderAgent abs_mysqlDataDir{
+        filename -> /var/lib/mysql/;
+        owner -> $mysqlUser;
+        server -> $mysqlSrv;
+}
+
+
+Coordinator abs_Mysql{
+        needs ProcessAgent n_proc_mysql = abs_mysqld;
+        needs FileAgent n_file_conf = abs_myCnfFile;
+        needs FolderAgent n_folder_data = abs_mysqlDataDir;
+}
+
+
+Coordinator default_MySql : abs_Mysql{
+        set $mysqlUser mysql;
+        set $myCnfFile /etc/my.cnf;
+}
+

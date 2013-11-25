@@ -1,0 +1,28 @@
+Server localhost {
+  address -> localhost;
+}
+
+FileAgent abs {
+  owner -> chaen;
+  server -> localhost;
+}
+
+FileAgent c : abs {
+  filename -> /tmp/test/c;
+}
+
+FileAgent b : abs {
+  filename -> /tmp/test/b;
+  after ANY trigger FILE_CHOWN on c;
+}
+
+FileAgent a : abs {
+  filename -> /tmp/test/a;
+  after ANY trigger FILE_CHOWN on b;
+}
+ 
+Coordinator X {
+  needs FileAgent a = a;
+  needs FileAgent b = b;
+  needs FileAgent c = c;
+} 

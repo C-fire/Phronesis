@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<entries>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Exiting analyzer engine</text>
+	<date>20-03-2013</date>
+	<time>15:57:43</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Received problem list : </text>
+	<date>20-03-2013</date>
+	<time>15:57:43</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Received answer : </text>
+	<date>20-03-2013</date>
+	<time>15:57:43</time>
+</entry>
+<entry>
+	<type>NEW_PB_QUESTION</type>
+	<text>Enter the problems list : </text>
+	<date>20-03-2013</date>
+	<time>15:20:14</time>
+</entry>
+<entry>
+	<type>CURRENT_PB</type>
+	<text>No problem being treated now</text>
+	<date>20-03-2013</date>
+	<time>15:20:14</time>
+</entry>
+<entry>
+	<type>NEW_MSG</type>
+	<text>VISITED:1</text>
+	<date>20-03-2013</date>
+	<time>15:20:14</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>No MetaAgent called </text>
+	<date>20-03-2013</date>
+	<time>15:20:14</time>
+</entry>
+<entry>
+	<type>CURRENT_PB</type>
+	<text></text>
+	<date>20-03-2013</date>
+	<time>15:20:14</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Received answer : </text>
+	<date>20-03-2013</date>
+	<time>15:20:14</time>
+</entry>
+<entry>
+	<type>NEW_PB_QUESTION</type>
+	<text>Please update the problem list : </text>
+	<date>20-03-2013</date>
+	<time>15:20:02</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Waiting to update problem list...</text>
+	<date>20-03-2013</date>
+	<time>15:20:02</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Received answer : YES</text>
+	<date>20-03-2013</date>
+	<time>15:20:02</time>
+</entry>
+<entry>
+	<type>NEW_YN_QUESTION</type>
+	<text>Did you apply the following suggestions? 
+
+RecoveryEngine : full solution
+MetaAgent name : netdis01_env
+RecoveryAction : RECOVERY_ENV_ON (29)
+Problem : The server "netdis01" (address : netdis01) seems to be down
+Solution : Turn it on again.
+Command : ipmitool &lt;ipmiUser&gt; -I lan -H &lt;ipmiAddress&gt; -P &lt;ipmiPass&gt; chassis power on
+(Alternatively, you could also go to press the button...)
+
+
+</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>RecoveryEngine : full solution
+MetaAgent name : netdis01_env
+RecoveryAction : RECOVERY_ENV_ON (29)
+Problem : The server "netdis01" (address : netdis01) seems to be down
+Solution : Turn it on again.
+Command : ipmitool &lt;ipmiUser&gt; -I lan -H &lt;ipmiAddress&gt; -P &lt;ipmiPass&gt; chassis power on
+(Alternatively, you could also go to press the button...)
+
+
+</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>RecoveryEngine : checking the recovery dependencies</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>MetaAgent name : netdis01_env
+RecoveryAction : RECOVERY_ENV_ON (29)
+Problem : The server "netdis01" (address : netdis01) seems to be down
+Solution : Turn it on again.
+Command : ipmitool &lt;ipmiUser&gt; -I lan -H &lt;ipmiAddress&gt; -P &lt;ipmiPass&gt; chassis power on
+(Alternatively, you could also go to press the button...)
+
+
+</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>RecoveryEngine : the required recovery steps for the faulty agents are the following</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>RecoveryEngine : trying to recover</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>The possibly impacted Coordinators are :  Icinga Icinga</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>We have diagnosed an environment problem on netdis01</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_MSG</type>
+	<text>DIAGNOSED:Icinga,Icinga,</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Impacted by the environment problem :  Icinga</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>We have diagnosed a problem on Icinga. The problem comes from netdis01_env</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Setting it as responsible (Cause : Nan -&gt; Server not pingable)</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Coordinator Icinga : the child Nan seems to have a problem.</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Setting it as responsible (Cause : Server not pingable)</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Coordinator Nan : the child Abstract_nanConf_Nan seems to have a problem.</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Coordinator Nan : entering analysis</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Coordinator Icinga : entering analysis</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Scheduler : I will analyze Icinga</text>
+	<date>20-03-2013</date>
+	<time>15:19:39</time>
+</entry>
+</entries>

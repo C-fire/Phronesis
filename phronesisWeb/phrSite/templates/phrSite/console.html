@@ -1,0 +1,21 @@
+{% extends "phrSite/base.html" %}
+{% block scripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{% endblock %}
+{% block content %}
+<script  type="text/javascript" src="{{ STATIC_URL }}scripts/console.js" language="javascript"></script>
+<h2 class="title">Console output</h2>
+<p class="meta">Output of the console (read from a file)</p>
+<div class="entry">
+<pre id="console">
+<script> refreshConsole(); </script>
+</pre>
+
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <p> This pages refreshes every 2 seconds and output the content of the console.</p>
+{% endblock %}
+

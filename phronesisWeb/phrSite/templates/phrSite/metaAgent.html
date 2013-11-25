@@ -1,0 +1,23 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">MetaAgent list</h2>
+<p class="meta"> All the metaAgents defined in the database</p>
+<div class="entry">
+{% if metaAgent_list %}
+    <ul>
+    {% for ma in metaAgent_list %}
+    {% if ma.valid == 1 %}  
+      <li><a href="{% url 'metaAgent_detail' ma.id %}">{{ ma.name}}</a></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No MetaAgent defined.</p>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <p> This page is a complete list of all the metaAgents available in the database</p>
+{% endblock %}

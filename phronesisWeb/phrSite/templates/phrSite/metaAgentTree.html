@@ -1,0 +1,16 @@
+{% extends "phrSite/base.html" %}
+{% block scripts %}
+<script  type="text/javascript" src="{{ STATIC_URL }}scripts/mktree.js" language="javascript"></script>
+{% endblock %}
+{% block content %}
+<h2 class="title">MetaAgentTree</h2>
+<p class="meta"> All the trees defined in the database</p>
+<div class="entry">
+
+<ul class="mktree" id="tree1">
+{% autoescape off %}
+        {{ maTree }} 
+{% endautoescape %}
+</ul>
+</div>
+{% endblock %}

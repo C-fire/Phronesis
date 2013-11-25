@@ -1,0 +1,14 @@
+import servers.phr;
+
+ProcessAgent mysqld{
+	server -> WebSrv02;
+	procName -> /usr/bin/mysqld;
+	cpu_time -> 5;
+}
+
+
+Coordinator Mysql{
+	needs ProcessAgent m;
+	m = mysqld;
+}
+

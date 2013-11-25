@@ -1,0 +1,30 @@
+import servers.phr;
+import metasite.phr;
+
+FileAgent Site1Index{
+	server -> $varSrv;
+	filename -> /var/www/html/index.php;
+}
+
+Coordinator Site1Data {
+	needs FileAgent a;
+	a = Site1Index;
+	setEnv WebSrv01 cpu 10;
+}
+
+FileAgent Site1CfgFile{
+        server -> $varSrv;
+        filename -> /etc/httpd/conf.d/httpd.conf;
+}
+
+Coordinator Site1Conf {
+  needs FileAgent b = Site1CfgFile;
+}
+
+
+
+Coordinator Site1 : Site {
+	Data = Site1Data;
+        Conf = Site1Conf;
+	set $varSrv WebSrv01;
+}

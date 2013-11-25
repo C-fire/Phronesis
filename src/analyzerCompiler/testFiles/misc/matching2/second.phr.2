@@ -1,0 +1,15 @@
+Server localhost {
+    address -> localhost;
+}
+
+FileAgent fa {
+    filename -> fa;
+    server -> localhost;
+}
+
+Coordinator PapC {
+    needs FileAgent a;
+}
+
+Coordinator Papb : PapC {
+}

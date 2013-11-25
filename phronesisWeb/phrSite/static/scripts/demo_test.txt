@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<entry>
+	<type>NEW_PB_QUESTION</type>
+	<text>Enter the problems list : </text>
+</entry>
+<entry>
+	<type>CURRENT_PB</type>
+	<text>No problem being treated now</text>
+</entry>
+<entry>
+	<type>CURRENT_PB</type>
+	<text></text>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Exiting analyzer engine</text>
+</entry>
+<entry>
+	<type>NEW_LOG</type>
+	<text>Received problem list : </text>
+</entry>

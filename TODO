@@ -1,0 +1,229 @@
+ANALYZER
+
+* BULLET POINTS
+* IV.3.a.v) flow chart, diagrams...
+* sed ' ~\ref' to '~\ref'
+* sed further to later
+* sed anytime to any time
+* add axes legend for V.1.2
+
+* EnvironmentAgent : we check fstab but we should also check the mount points themselves!
+* EnvironmentAgent : we should check disk health state -> difficult... an "ultimate test" could be to try the writability of it. Or smarttest if supported.
+* In all the recovery solution, comment on those that are not used (is recovery_fstab pertinent??)
+* Why do I use the metaAgent name for the recoveryUnit and not a pointer to the metaAgent?
+* get some more descriptive names for some fonctions (e.g. getAfters)
+* Change my graph algorithm for the one suggested by Philippe -> no, add it and let the choice.
+* add a user id and group id for process and files?
+* for the ProcessAgent, we could add am inimum number of children and a maximum
+* Add counters here and there in the code to make statistics
+* I could overload the function updateProbability in the Agents to add some history/log or increment counters
+* Coordinator::getMaxRecoveryAttemptsAllowed() should be smart
+* there is a problem in the way I manage the classification : if a corodinator is in 2 trees, it only has 1 classification, which can be problematic
+* add a check for open port
+* add an algo to check that we don't add a cyclic rule -> it is enough to follow the link and make sure that there is no 2 times the same entity 
+* whenchecking the history, also check the history of the similar cases. I just don't know how yet....
+* Add dynamic directives like : readable by the user or so
+* in the DB, now that I return the amount of rows, maybe the exception are not properly managed anymore
+* I am not so happy with the way I manage the kernel process. I should have a way to notice them better, and thus treat them differently.Also I cannot detect processes started with wrong argument (see selfAnalyze of ProcessAgent )
+* Scheduler::getNext() : instead of rnd, use the local_total
+* when a new rule is validated/added/removed blabla, we should flush RuleManager::m_weightMap, not every time we call sortAccordingDependencies
+* let as an option the depth at which we try our last bullet
+* when receiving problem, check common dependencies. If there are, add them to the list?
+* I think I don't add new problems to the problem list
+* when checking the environment, I should ignore those that comes from vetoed Coordinators
+* add an option for how much history we should return
+* ProcessAgent : I only look at the first element of the children list
+* When a server is detected down without going through analyzeEnvironment, I don't loop throught the involvedServer in the aggregator to build the impacted Coordinators list -> I THINK it is done
+* In the Treatment::mount_isMountpointMounted, I don't really check properly if it is mounted. I should ask for a username to try the write (no_root_squash problem)
+* I don't see the afs mountpoint....
+* BUG : Processagent : I don't catch the exeception when querying for the pidTree
+* ignoreFs should be splited in ignoreFsInode and ignoreFsSpace!! Or ignoreFsType -> cvfs!
+* use the fetchAll feature in all the Agent when querying.
+* for the environment, the disk size and inode size limits should be possible to set by the user and not always the default values
+* do something when we get runtime error on the remote agent, but what?
+* BUG : EnvironmentRecovery in case of overload : it is useless to test whether the pid is already in m_pidsToBeKilled, since it is a set...
+* is it logical that when we have a problem querying remote agent in the File/Folder/Process agent, we set ourselves as responsible? In principle it should not happen, since the environment was checked to be sain, but if it happens? The Agent Recovery do not at all check this. I should do something for it
+* in the api_message NEW_LOG, we could use the id as a severity level
+* implement a retry option for queryRemoteAgent 
+* in the AnalyzerDBApi, replace USE_MYSQL with a -D compiler flag
+* We could check somewhere that every Server has an environment agent
+* Veto are not powerful enough yet. If a coordinator A is reported and depends on B; if B is not reported, but has a veto active; then we are fucket
+* In Aggregator::updateProblemList : I think I know why I was bulding goneProblems with allButImpacted, but I have to make tests. Why did I come back??? -> I THINK (to be checked) : m_impactedCoordinators contains more than one element only if it is an EnvironmentProblem, which does not create new rule, so there will not be any rules created for this. Also, RuleManager::addSolveRule does not add a A->A rule.
+* "Note that in case of Environment problem, or when one works on non reported Coordinators, no new dependency rules are infered." -> but this is completely stupid no??
+===========================================================================================================================================================
+COMPILER
+
+* add comment possibility -> done
+* when reassigning a need, I should maybe destroy the replaced one -> done
+* There is probably a bug with the FolderAgent. If I define a content in the folderAgent, it will use the parse_action_file_content method, and add the content to the last file defined. -> corrected :-)
+* on the folder agent, add filter like 'all the subfile whose name start with, end with...' -> added directive 'nameFilter'
+* does the 'requires' directive needs to be forwarded to children? like 'Icinga requires Gearman' also means that 'nand requires gearman' (which is kind of wrong) and that 'icingad requires gearman' (which is kind of true) ? -> No. If the user wants to propagate it, he will have to do it manually. Adding a requires is easier than removing one.
+* give the possibility to set the depth directive for the folders -> done, called maxDepth
+* there is no way now to define an environment variable for a process! -> envVar
+
+* compiler : create trigger that we define on the target? (e.g. : define on the process description that when the conf file is touched, I should restart)
+* for the time beeing, I cannot define a Require rule at the Meta level. When I will give this possibility, I should probably also add in the db the rules of meta Agent (so not fully defined)
+* give the possibility to start the parser without args (takes the folder/file in the runtime.py), with a list of args
+* when assigning need, check the type of the MetaAgent assigned
+* ligne 800 in utils, when creating abstract agent : we always create Coordinator. We could either create what is really needed, either add a other type called 'abstract' or so
+* stop compiling when a line is not understood. But how...
+* support variables inside line for example for file name : $varFolder/myFile.smt
+* give the possibility to re assign variables later
+* if something is pure pure pure abstract, with no children, maybe we can delete it from the db?
+* BUG : when inheriting directly an Agent where there are trigger defined, the suffix is not updated -> added 'triggerSuffix' directive -> OR BETTER MAYBE : I could copy the trigger from what I delete, and replace the suffix there... to be tried...
+* if we put an abstract server in a def, apply it to all the children
+
+* BUG : when inheriting a parent process, there is no copy done of the child process. 
+* so far I cannot require an attached Coordinator
+* to improve performance that are killed with deep copy, I can create a pool of values, a bit like in the flyweight(http://codesnipers.com/?q=python-flyweights) and the attribute of the objects will in fact be an index to the pool, rather than a value
+* BUG : when inheriting from a process, we should also copy it's environmentAgent. I don't know if it is done or not
+* case insensitive attributes
+* BUG : if triggerSuffix is not added, I can define a trigger on an abstract entity, which is not instanciated in the Core. -> make a check that we do not do that (when writing to sql is the best place)!
+* ENORMOUS BUG MEGA CRITICAL : the new unique name system (with the numbers) breaks down the triggerSuffix, because the user has NO WAY to know what will be the name of the entities. I have to find another way (see testFile/misc/triggerInh2/)
+============================================================================================================================================================
+
+PARTIALLY ADDRESSED
+
+
+
+
+
+
+* When working on process tree, we should check that the pid still exists when we keep going, otherwise it crashes (gearman worker children e.g.) -> done. I am checking if the lvl is > 0 and the multiplicity is -1. If so, then I don't care if it died. I could actually have better analysis, since this can be true for lvl 0 processes as well...
+
+
+* Add Exceptions everywhere! -> ongoing
+* transform in const what can be done -> ongoing
+* apply the coplyen (copy, destructor...) form to all my objects -> Done for all the object of which I don't have a single instance -> BUGY (FileAgent a = smt; BOOM)
+
+
+
+
+* in Aggregator::updateProblemList, looking at those we think to have solved, we should be carefull. We need to call updateProblemList to improve rules and so on, but we should probably not go through the m_impactedCoordinators loop not to create insane rules when trying(Un)ValidateRules; Think about it... -> the variable whereas I am trying my last bulets or not are now member variable, so I make the distinction in the update procedure. But so far, when doing trial Coordinator diagnostics, I completely ignore new problems 
+
+
+* InteractionManager::getLog removes the head when we read it. This means only one reader... we shall maybe change this.. -> getLog not used anymore, I could maybe remove m_log attribute, unless I want to keep it and send the latest logs to new observers...
+
+* the way I manage children process really seems strange... I never call addChild, so I probably never do anything on them -> now I am a bit more clever :)
+
+* New algorithm
+
+	* Is it worth testing if the servers are up in the aggregator? Can't we just do it as the first step of the env agent since they are anyway checked first -> This is tested as a prerequest by all the agent, and actively pinged by the environment agent
+	* Aggregator::analyze should maybe sometimes returns something else than false... -> returns true if the list of undiagnosed problem is empty
+	* AnalyzerEngine::analyze should maybe sometimes return something else than false? -> returns the output of Aggregator::analyze
+	* in AnalyzerEngine::analyze, shouldn't we check the output of m_agg->analyze? -> done
+	* can we merge the method 'getServer' and 'getInvolvedServer'? -> getInvolvedServer returns all the server below a Coordinator. It is used in the aggregator to check all the servers before analyzing anything. This should be changed... -> environment are now tested at the end
+	* addEnvironmentAgent and addFirstLvlServer in Coordinator not used anymore? Or am I simply not really checking the env agents???? -> addFirstLvlServer is used in the metaAgentPool. I removed the addEnvironmentAgent. Maybe it could be done dynamicaly if it does not take too much time... This has to be put in relation to getServer and getInvolvedServer -> no FirstLvlServers anymore
+	* Also we should maybe propagate the analyzedServer list lower in the tree. -> no, the coordinator does not look at the servers anymore.
+
+
+
+
+
+
+==========================================================================================================================================================
+
+TOOK A DECISION BUT KEEP IN MIND
+
+
+* is Aggregator::parseProblemString really a place to do this? Shouldn't we do it somewhere else? Also we redo the string format check. Is it needed? -> I keep it here so far, but I replaced the custom made algo with boost::split
+* the function Scheduler::getNext should raise an exception rather than returning NULL -> I do it, but I don't think it will ever be thrown because of the conditions of the do while. Maybe an assert would help... let see. -> I added the assert
+* ProcessAgent : findProcessTreeHeads : why head = V(a) + V(c) et not head = a + c ?? -> I replaced it. Keep it in mind though
+* are we using the operators == and < for the MetaAgent? -> yes, because they are inherited, and we use them for the set_difference inAggregator::updateProblemlist
+* add namespaces -> no, it's not a framework...
+* replace the exception when there is 0 result with a integer return which contains the amount of row. This would maybe allow to merge executeQuery and insertQuery -> I return now 0, but I don't want to merge executeQuery and insertQuery, I find it clearer. Also, not sure that the null check in executeQuery would be satisfied when inserting things, eventhough they are perfectly fine
+* we could use transaction with the DB to keep consistency (for example in probabilityManagerDb::updateProbability) -> very seldom usecase, maybe one only, to be seen later
+* in aggregator, is m_diagnosedproblems really usefull? -> no, not yet, but maybe I can do something with it (like flapping state during diagnostic)
+* RuleManager::getWeight : the +1 should be out of the for loop I think -> does not really matter....
+
+
+============================================================================================================================================================
+
+DONE
+
+
+* Should all the syslog call be added in the InteractionManager? -> DONE
+* in MetaAgentPool, getFileAgent, getEnvironmentAgent and getProcessAgent don't seem to be used anymore -> Removed.
+* MetaAgentPool::getMetaAgent : create a real exception rather than throwing a string -> Replaced with std::runtime_error
+* check if getMetaAgentType is style relevant -> Removed
+* get ride of all the testFunc -> DONE
+* OVECCOUNT in fileagent not used anymore? and strange c include -> Removed
+* sortMap in Aggregator.[ch]pp not used anymore? -> Removed
+* InteractionManager::addQuestion should throw an exception rather than returning -1 if there is no slots available? -> I replaced it with an exception. But it would eventually be nice to be able to loop "while there is no free slot, ask". But anyway, this should not happen, as the questions are so far all blocking
+* InteractionManager::~interactionManager : why do I not delete the array of mutex and UserQuestion? I tremember there was a reason... I think because the questions are freed by the one that created it. to be checked -> Because I release the lock in InteractionManager::run() when stopReceived is true, and then the other thread can continue and free the Question.
+* RecoveryEngine::m_recoveries seem deprecated -> Removed
+* ServerManager::getServer should throw an exception if the Server does not exist -> Done
+* in SyncManager.hpp : the attribute "mutex" seems useless.. -> Removed
+* we cannot pass everything via nrpe because of illegal characters. For exemple, we can't do anything with : /usr/bin/perl -wT /usr/local/nan/nand -- -p -c /usr/local/nan/nand.conf /var/run/nand.pid -> Solved with my new agent
+* is agentType still needed in recoveryUnit? -> Removed
+* what about parsing done in C? Look at libconfuse -> why bother... python is good for that
+* Use a facade pattern for the Client API? Or an observer? -> Observer.
+* When a limit is not fitting, display the name rather than the id -> Done
+* command to run might be different than the one visible on the line visible in ps.-> add a field command
+* for Agents, m_responsibleChild should be initialized to this, and eventually changed to point to the FileAgent of Fstab for example. This implies to also call getResponsibleChild on Agents. Or I could consider it in the recovery process... -> Now by default the repsonsibleChild for the Agent is this, and can be changed if needed
+* remove envInfo attribute in client.hpp-> Removed
+* remove getCommand and suggest in the AgentRecovery? -> getCommand is needed (returns the command to execute depending on the needed action), and suggest was removed
+* move thread creation and so on in a .hpp file? -> using boost. So no hpp files needed
+* UserMsg : is checkUserAction really needed? -> Removed
+* count the amount of time a host has been down -> Done
+* AnalyzerDBAPIExceptions : have more detailed exceptions! -> I use only runtime_error now
+* Add preprocessor instruction in the dbApi to compile only the db type we want -> support multi db!! -> Done
+* Try to abstract all what is related to the RPC everywhere (main, InteractionManager...) -> no rpc anymore.
+* create a notImplemented exception -> Done (use runtime_error)
+* printReq boolean in execute query usefull? -> Yes, I keep it for debug purposes
+* ProbabilityManagerDb::addUnsolved seems not used -> Now it is, when we exit the aggregator with some problem undiagnosed
+* the attribute m_solved in the scheduler should maybe be renamed with something not containing "solved" in it, since nothing is solved yet. Same for other variables and attributes. -> Done
+* I had to copy the method "queryRemoteAgent" from MetaAgent to Server, which is ugly. I would like to put it somewhere else. maybe in the server, and then in the agent I call server->queryAgent... -> Became useless
+* rename ServerManager as ServerPool or MetaAgentPool as MetaAgentManager? -> ServerManager became ServerPool
+* RecoveryEngine::recover should not always return true -> it returns true if the user applied the recommandation, false otherwise
+* is m_srv really util in EnvironmentRecovery -> I think yes. But we will have to see if I decide not to do the ping/ipmi test on teh aggregator anymore. -> removed 
+* Add all the method of ProbabilitymanagerDb to ProbbilityManager. Or maybe not. The MetaAgent don't need to know about those other methods. Let's think about it. -> I will not do it so far for the previously writen reasons
+* Base the Aggregator, scheduler, MetaAgentPool and so on on singleton? -> no, since it is not user exposed. I simply create them once and then pass on the pointer
+* do we still need m_cause in the Agent? -> We  don't need them in the meaning that they are shown only on the phronesisAnalyzerCore output, and not used for any usage. But still, I'll keep it :-)
+* Check if all the virtual are needed -> cleaned
+* ProcessAgent : cpu and mem threasholds should be variables, same for EnvironmentAgent -> Done, in the db with default value 100 
+* Transform return code into exception? Tough because it is dynamic library, but lets see... -> Done but we should consider to have the executeQuery returning the number of line, rather than throwing excpetion of it is 0 -> Done
+* How does my thread system works????? There is probably a more standard way? Also for the semaphore of the syncManager which are very C oriented... -> pthread being replaced (in surface...) by boost::thread. The mutex system is still there
+* add a non interactive mode, based only on known rules. -> not relevant. I will always need interaction
+* understand which constructor of AgentRecovery(Agent * agent, RecoveryUnit rUnit) and 	AgentRecovery(Agent * agent, recoveryAction action) is needed -> sorted out
+* we should not crash when no process agent is defined... -> solved by returning the number of rows in executeQuery, rather than throwing exception
+* in getRecoveryRulesTree, replace 'direction' argument with a enum rather than a string -> no it's fine like this. So I can add more direction in the db, it will be transparent to the code
+* is it necessary to have an array of of questions in the interaction manager since they are anyway locking the process? Isn't one pointer to a YesNoQuestion and one pointer to a a ProblemQuestion enough? All this would make the treatment much easier. -> Now the system is in place and thread safe. So we can keep this. Maybe once we will have questions from concurent thread, so keep it
+* the port number for the agent should be variable and not hard coded in 7171 -> in the configuration file
+* Do I need the operator == != < for Coordinator if they are defined in MetaAgent? -> no since they compare the same things
+* check inheritance of MetaAgent/Agent/metaAgent. Maybe we can move some things lower in the hierarchy (e.g. the probability manager, setPManager, addChild...) -> not really
+* Add a FolderAgent? -> done
+* use the DEBUG preprocessor directives where relevant -> not really relevant
+* The writing in the log should be a special observer, and not hard coded. Same for cout -> Done
+* take into account the ANY recoveryRule -> ANY should be translated by the parser. -> Done for file Agent, I should do it for all the rest -> DONE
+* Make configuration files
+	* Core : port for agent, port for interaction, db information, threshold to validate rules, timeout for client requests, debug lvl
+	* Agent : port to listen to, timeout for command execution
+* in the coordinator add the possibility to say that N out of M should be okay -> see "tolerate" 
+* take into account new problems in Aggregator::updateProblemList -> Done, but so far they are simply added to the list. No special rules -> I add history now
+* RuleManager::addSolveRule we could add a threshold after which the rules are automaticaly validated (like it was done for the CHEP's tests). We could also return a boolean if it was validated or not -> Done. The threashold should be an option -> done as well
+* Add a rule for problem creation : solving this provoked that -> We should just keep tracks of them and put it as warning -> done
+* only occurrence id should be inherited. There is no reason for keeping 'Total' as a shared counter. -> I have added localTotal and localOccurence in the db. I still need to add them to the source code. -> done. It is updated at the same time than the global ones.
+* When checking the cpu/mem consumption, do it on an average, not only peak... -> done. 3 attempts, with a 1 sec sleep between 
+* Aggregator::checkAll loops through all the top coordinators and analyzes them, but does not check the return value of the analyzis. -> returns a report
+* in Analyzer::checkAll, shall we check the output of Aggregator::checkAll? -> done. Gets a report and sends it to the interfaces
+* Aggregator::checkAll should maybe check all the low level agent actually... -> done. New method Called fullCheck
+* We should somehow give the possibility to the MetaAgents to write something in the InteractionManager, especialy in case of problems (e.g in analyze) -> done
+* the counters for dead servers are not incremented in the db -> done
+* manage better the connection error in the Agent -> the client now throws exception, we should handle them carefully now -> maybe when connection problem occur, we just say that there is no problem, and then it will be managed only by the environment agent.
+    Error in handle connect Connection refused
+    terminate called after throwing an instance of 'std::runtime_error'
+      what():  Error in handle_connect : Connection refused
+    Aborted
+  -> DONE
+
+* For the environment Agent, add a 'ignore list' for the full inodes, because storenext always appear to be full.... -> SO far they are in a vector. Maybe it would be nice to have 2 lists (or map/set for the speed?) : one for the inodes, one for the space. In any case, the compiler and the db are not ready for it yet -> DONE. And there is only one vector.
+* REMOVE THE AttachedCoord tables, and use the id_server field from the MetaAgent? it would make sense I think.... idiot -> done
+* is the limits fild in the ProcessAgent table still needed? Same for id_envAgent in Server -> gone :)
+* add conditions -> done
+* BIG BUG : when many remote don't answer, segfault... -> fixed. Some memory corruption because I did not have the coplien form for the messages...
+* BUG : I never increment the local_total of the Agent -> fixed
+* how do I do for LDAP?? -> attached Coordinator
+* BUG : environmentRecovery : nothing is done for full swap! I just should to the same than for memory -> done
+* BIG BUG : classification see testFiles/misc/classifTest/output.sql : "A_lvl2;B_lvl1" will diagnose only A_lvl2 -> should be fixed. I replaced the string with a vector of integer which is a description of the path in the tree
+* in the server, give several addresses? -> No, because no network diagnosis. I should give the address needed for me to contact it, and that's it

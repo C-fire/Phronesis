@@ -1,0 +1,78 @@
+Drop database  IF EXISTS phronesisAnalyzer;
+create database phronesisAnalyzer;
+use phronesisAnalyzer;
+source /home/chaen/phronesis/phronesisAnalyzer.sql;
+
+
+
+
+
+
+
+
+
+
+
+
+insert into Server(id, name, address) values (3, 'hops', 'hops');
+insert into Server(id, name, address) values (1, 'abs', 'None');
+insert into Server(id, name, address) values (2, 'localhost', 'localhost');
+
+
+insert into Total (id) value (2);
+insert into MetaAgent (id, name, type, id_server, id_total, classification,valid, tolerate) values (15,'EnvCoordb_on_hops', 'Coordinator', 3, 2, 'A-0',True, 0);
+insert into Total (id) value (3);
+insert into MetaAgent (id, name, type, id_total, classification,valid, tolerate) values (12,'TestCoord', 'Coordinator', 3, 'B-0',True, 0);
+insert into Total (id) value (1);
+insert into MetaAgent (id, name, type, id_server, id_total, classification,valid, tolerate) values (17,'EnvCoord_on_localhost', 'Coordinator',2,  1, 'C-0',True, 0);
+insert into MetaAgent (id, name, type, id_total, classification,valid, tolerate) values (10,'EnvCoord', 'Coordinator', 1, 'None',False, 0);
+insert into MetaAgent (id, name, type, id_server, id_total, classification,valid, tolerate) values (19,'EnvCoordb_on_localhost', 'Coordinator',2,  2, 'D-0',True, 0);
+insert into MetaAgent (id, name, type, id_server, id_total, classification,valid, tolerate) values (13,'EnvCoord_on_hops', 'Coordinator', 3, 1, 'E-0',True, 0);
+insert into MetaAgent (id, name, type, id_total, classification,valid, tolerate) values (11,'EnvCoordb', 'Coordinator', 2, 'None',False, 0);
+
+
+
+insert into MetaAgent (id, name, type, id_server, valid) values (6,'hops_fstab', 'FileAgent', 3, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (1, 6, '/etc/fstab', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server, valid) values (16,'fb_EnvCoordb_on_hops', 'FileAgent', 3, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (2, 16, 'anotherfileimportantforthesystem', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server, valid) values (14,'fa_EnvCoord_on_hops', 'FileAgent', 3, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (3, 14, 'afileimportantforthesystem', '', '', '', '', '');
+insert into MetaAgent (id, name, type, valid) values (7,'fa', 'FileAgent',False);
+insert into MetaAgent (id, name, type, valid) values (8,'fb', 'FileAgent',False);
+insert into MetaAgent (id, name, type, id_server, valid) values (20,'fb_EnvCoordb_on_localhost', 'FileAgent', 2, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (4, 20, 'anotherfileimportantforthesystem', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server, valid) values (9,'realFile', 'FileAgent', 2, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (5, 9, '/tmp/', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server, valid) values (4,'localhost_fstab', 'FileAgent', 2, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (6, 4, '/etc/fstab', '', '', '', '', '');
+insert into MetaAgent (id, name, type, id_server, valid) values (18,'fa_EnvCoord_on_localhost', 'FileAgent', 2, True);
+insert into FileAgent (id, id_metaAgent, filename, owner, grp, permissions, attributes, md5) values (7, 18, 'afileimportantforthesystem', '', '', '', '', '');
+insert into MetaAgent (id, name, type, valid) values (2,'abs_fstab', 'FileAgent',False);
+
+
+
+
+
+
+insert into MetaAgent (id, name, type, id_server, valid) values (5,'hops_env', 'EnvironmentAgent', 3, True);
+insert into EnvironmentAgent (id, id_metaAgent, id_fstab, maxLoad, maxMemory, maxSwap) values (1, 5, 1, 2, 100, 99);
+insert into MetaAgent (id, name, type, valid) values (1,'abs_env', 'EnvironmentAgent',False);
+insert into MetaAgent (id, name, type, id_server, valid) values (3,'localhost_env', 'EnvironmentAgent', 2, True);
+insert into EnvironmentAgent (id, id_metaAgent, id_fstab, maxLoad, maxMemory, maxSwap) values (2, 3, 6, 2, 100, 99);
+
+
+insert into Occurrence(id) value (2);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (1, 15, 16, 2);
+insert into Occurrence(id) value (3);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (2, 12, 9, 3);
+insert into Occurrence(id) value (1);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (3, 17, 18, 1);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (4, 10, 7, 1);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (5, 19, 20, 2);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (6, 13, 14, 1);
+insert into MetaAgentTree (id, id_parent, id_daughter, id_occurrence) values (7, 11, 8, 2);
+
+
+
+

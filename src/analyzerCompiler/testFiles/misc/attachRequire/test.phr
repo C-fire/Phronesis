@@ -1,0 +1,28 @@
+# THIS DOES NOT WORK!!!!
+
+
+Server localhost {
+    address -> localhost;
+    attach Attached;
+}
+
+FileAgent a{
+  filename -> a;
+  server -> localhost;
+}
+
+FileAgent b{
+  filename -> b;
+  server -> localhost;
+}
+
+Coordinator Attached {
+   needs FileAgent a = a;
+}
+
+Coordinator detached {
+   needs FileAgent b = b;
+   requires Attached_on_localhost;
+}
+
+

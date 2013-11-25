@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# phronesisAnalyzerAgent        Startup script for the Gearman server
+#
+# chkconfig: - 85 15
+# description: phronesisAnalyzerAgent is the monitoring agent used by Phronesis.
+# processname: phronesisAnalyzerAgent
+# config: /etc/sysconfig/phronesisAnalyzerAgent
+# pidfile: /var/run/phronesisAnalyzerAgent/phronesisAnalyzerAgent.pid
+#
+### BEGIN INIT INFO
+# Provides: phronesisAnalyzerAgent
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $network
+# Default-Start:
+# Default-Stop:
+# Short-Description: start and stop the Phronesis Agent
+# Description: Gearman is a distributed job system.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+ulimit -c unlimited
+
+if [ -f /etc/sysconfig/phronesisAnalyzerAgent ]; then
+        . /etc/sysconfig/phronesisAnalyzerAgent
+fi
+
+[ -z "${PIDFILE}" ] && pidfile="/var/run/phronesisAnalyzerAgent.pid"
+[ -z "${LOCKFILE}" ] && lockfile="/var/lock/subsys/phronesisAnalyzerAgent"
+
+#phronesisAnalyzerAgent=/usr/bin/phronesisAnalyzerAgent
+configFile=/home/chaen/phronesis/src/analyzer/sample-conf/phronesisAnalyzerAgent.conf
+phronesisAnalyzerAgent=/home/chaen/phronesis/bin/phronesisAnalyzerAgent
+prog=phronesisAnalyzerAgent
+
+RETVAL=0
+
+start() {
+        echo -n $"Starting $prog: "
+        daemon --pidfile=$pidfile --user=root $phronesisAnalyzerAgent -c $configFile 
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && (touch $lockfile; pgrep -f $phronesisAnalyzerAgent > $pidfile)
+        return $RETVAL
+}
+
+stop() {
+	echo -n $"Stopping $prog: "
+	killproc -p $pidfile $phronesisAnalyzerAgent
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f $lockfile $pidfile
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status -p $pidfile $phronesisAnalyzerAgent
+	RETVAL=$?
+	;;
+  restart|reload)
+	stop
+	start
+	;;
+  condrestart|try-restart)
+	if status -p $pidfile $phronesisAnalyzerAgent >&/dev/null; then
+		stop
+		start
+	fi
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|reload|condrestart|status|help}"
+	RETVAL=3
+esac
+
+exit $RETVAL
+

@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# phronesisAnalyzer        Startup script for the Gearman server
+#
+# chkconfig: - 85 15
+# description: phronesisAnalyzer is the core component of Phronesis.
+# processname: phronesisAnalyzer
+# config: /etc/sysconfig/phronesisAnalyzer
+# pidfile: /var/run/phronesisAnalyzer/phronesisAnalyzer.pid
+#
+### BEGIN INIT INFO
+# Provides: phronesisAnalyzer
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $network
+# Default-Start:
+# Default-Stop:
+# Short-Description: start and stop the Phronesis Core
+# Description: Phronesis Core
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+ulimit -c unlimited
+
+
+if [ -f /etc/sysconfig/phronesisAnalyzer ]; then
+        . /etc/sysconfig/phronesisAnalyzer
+fi
+
+[ -z "${PIDFILE}" ] && pidfile="/var/run/phronesisAnalyzer.pid"
+[ -z "${LOCKFILE}" ] && lockfile="/var/lock/subsys/phronesisAnalyzer"
+
+#phronesisAnalyzer=/usr/bin/phronesisAnalyzer
+configFile=/home/chaen/phronesis/src/analyzer/sample-conf/phronesisAnalyzerCore.conf
+phronesisAnalyzer=/home/chaen/phronesis/bin/phronesisAnalyzerCore
+prog=phronesisAnalyzer
+
+RETVAL=0
+
+start() {
+        echo -n $"Starting $prog: "
+        daemon --pidfile=$pidfile --user=root $phronesisAnalyzer -c $configFile -d 
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && (touch $lockfile; pgrep -f $phronesisAnalyzer > $pidfile)
+        return $RETVAL
+}
+
+stop() {
+	echo -n $"Stopping $prog: "
+	killproc -p $pidfile $phronesisAnalyzer
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f $lockfile $pidfile
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status -p $pidfile $phronesisAnalyzer
+	RETVAL=$?
+	;;
+  restart|reload)
+	stop
+	start
+	;;
+  condrestart|try-restart)
+	if status -p $pidfile $phronesisAnalyzer >&/dev/null; then
+		stop
+		start
+	fi
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|reload|condrestart|status|help}"
+	RETVAL=3
+esac
+
+exit $RETVAL
+

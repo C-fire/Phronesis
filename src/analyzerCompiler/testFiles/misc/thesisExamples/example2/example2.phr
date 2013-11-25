@@ -1,0 +1,68 @@
+# We define two Coordinators that will be attached to Servers
+
+
+# Note that eventhoug mandatory, the 
+# server attribute is not set. It is because
+# it will be set when attached to a Server
+
+FileAgent conf1 {
+  filename -> /path/to/conf;
+}
+
+FileAgent conf1bis {
+  filename -> /path/to/conf/bis;
+} 
+
+# The first Coordinator contains 2 FileAgents
+# However, the "tolerate 1" directive means
+# that out of the two, only one needs to be okay.
+# This is useful for example when a file used for 
+# the same purpose (e.g. ldap configuration)
+# is in a different location
+# depending on the operating system version.
+
+Coordinator attach1 {
+  tolerate 1;
+  needs FileAgent f1 = conf1;
+  needs FileAgent f1bis = conf1bis;
+}
+
+
+# On this file, the server attribute is assigned
+# a variable. When attached to a Server, the compiler
+# will make sure to remove the server from the list
+# of attributes waiting for $variable to be set.
+
+FileAgent conf2{
+  filename -> /path/to/conf2/;
+  server -> $variable;
+}
+
+Coordinator attach2{
+  needs FileAgent f2 = conf2;
+}
+
+# abs_srv is an abstract server (it has no address)
+# with two attached Coordinators.
+
+Server abs_srv {
+  attach attach1;
+  attach attach2;
+}
+
+# real_srv_1 inherits from abs_srv
+# and so has two attached Coordinators
+# which are copies of attach1 and attach2
+Server real_srv_1 : abs_srv {
+  address -> 192.168.1.50;
+}
+
+
+# real_srv_2 inherits from abs_srv
+# but we detach attach1, so the only
+# attached Coordinator it has is 
+# a copy of attach2
+Server real_srv_2 : abs_srv {
+  detach attach1;
+  address -> 192.168.1.51;
+}

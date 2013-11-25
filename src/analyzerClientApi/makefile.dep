@@ -1,0 +1,4 @@
+PhronesisConsole.o: PhronesisConsole.cpp
+phrUtils.o: phrUtils.cpp phrUtils.hpp phronesisAnalyzerClientApi.hpp \
+ PhronesisConsole.hpp
+pyPhronesismodule.o: pyPhronesismodule.cpp phronesisAnalyzerClientApi.hpp

@@ -1,0 +1,33 @@
+{% extends "phrSite/base.html" %}
+{% block content %}
+<h2 class="title">History list</h2>
+<p class="meta"> All the History stored in the database</p>
+<div class="entry">
+{% if history_list %}
+    <table border="1">
+    <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Responsible</th>
+    </tr>
+    {% for hist in history_list %}
+        <tr>
+        <td align="center"><a href="{% url 'history_detail' hist.id %}">{{ hist.date}}</a></td>
+        <td align="center">{{ hist.time}}</a></td>
+        <td align="center">{{ hist.responsible}}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No history is available.</p>
+{% endif %}
+
+</div>
+{% endblock %}
+
+{% block help %}
+<li>
+  <p>This page lists all the history we have on previous recoveries.</p>
+  <p>Each one gives information about what actions were undertaken, what were the problems before and after</p>
+</li>
+{% endblock %}

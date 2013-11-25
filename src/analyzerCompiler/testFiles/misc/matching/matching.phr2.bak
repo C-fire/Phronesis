@@ -1,0 +1,96 @@
+Server localhost {
+    address -> localhost;
+}
+
+FolderAgent V{
+    filename -> V;
+    server -> localhost;
+}
+
+Coordinator U{
+    needs FolderAgent n_v = V;
+}
+
+ProcessAgent MetaHttpd {
+        procName -> /usr/sbin/httpd;
+        user -> root;
+        server -> $webSrv;
+}
+
+Coordinator MetaSite {
+        needs Coordinator MetaData;
+        needs Coordinator MetaConf;
+        needs ProcessAgent Metahttpd = MetaHttpd;
+}
+
+FileAgent F1 {
+    server -> $webSrv;
+    filename -> f1;
+}
+
+FileAgent F2 {
+    server -> $webSrv;
+    filename -> f2;
+}
+
+FileAgent F3 {
+    server -> $webSrv;
+    filename -> f3;
+}
+
+Coordinator Conf1 {
+    needs FileAgent f = F1;
+}
+
+Coordinator Data1 {
+    needs FileAgent f = F2;
+    needs FileAgent f3 = F3;
+}
+
+Coordinator Site1 : MetaSite { 
+    MetaData = Data1;
+    MetaConf = Conf1;
+    set $webSrv localhost;
+    set $webUser apache;
+}
+
+
+FileAgent F4 {
+    server -> $webSrv;
+    filename -> f4;
+}
+
+FileAgent F5 {
+    server -> $webSrv;
+    filename -> f5;
+}
+
+Coordinator Conf3 {
+    needs FileAgent f = F4;
+}
+
+Coordinator Data3 {
+    needs FileAgent f = F5;
+}
+
+Coordinator Site3 : MetaSite { 
+    MetaData = Data3;
+    MetaConf = Conf3;
+    set $webSrv localhost;
+    set $webUser apache;
+}
+
+FileAgent E{
+    filename -> E;
+    server -> localhost;
+}
+
+FileAgent F{
+    filename -> F;
+    server -> localhost;
+}
+
+Coordinator C{
+    needs FileAgent f1 = E;
+    needs FileAgent f2 = F;
+}

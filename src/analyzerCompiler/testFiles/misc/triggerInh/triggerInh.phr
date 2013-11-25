@@ -1,0 +1,60 @@
+Server localhost {
+  address -> localhost;
+}
+
+#ProcessAgent absProc{
+#  procName -> blabla;
+#  server -> localhost;
+#}
+#
+#ProcessAgent realProc : absProc {
+#}
+#
+#FileAgent absFile {
+#  filename -> bvlabla;
+#  server -> localhost;
+#  after ANY trigger PROCESS_RESTART on absProc;
+#}
+#
+#FileAgent realFile : absFile {
+#  triggerSuffix -> _coord;
+#}
+#
+#Coordinator coord {
+#  needs ProcessAgent p = realProc;
+#  needs FileAgent f = realFile;
+#}
+#
+
+
+ProcessAgent abs_nfsd{
+        server -> $nfsSrv;
+        procName -> nfsd;
+}
+
+FileAgent abs_exportFile{
+        server -> $nfsSrv;
+        filename -> /etc/exports;
+        after ANY trigger PROCESS_RESTART on abs_nfsd;
+}
+
+Coordinator abs_Nfs{
+        needs ProcessAgent n_p_nfsd = abs_nfsd;
+        needs FileAgent n_fi_exportFile = abs_exportFile;
+}
+
+################################################################
+
+FileAgent real_exportFile : abs_exportFile {
+    content -> /exportedFolder *(ro,root_squash,no_wdelay,fsid=1);
+#    triggerSuffix -> _realNfs;
+}
+
+Coordinator realNfs : abs_Nfs {
+    n_fi_exportFile = real_exportFile;
+    set $nfsSrv localhost;
+}
+
+Coordinator realNfs2 : abs_Nfs {
+    set $nfsSrv localhost;
+}

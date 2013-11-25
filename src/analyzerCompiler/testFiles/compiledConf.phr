@@ -1,0 +1,126 @@
+ProcessAgent MetaHttpd {
+	procName -> /usr/sbin/httpd;
+	user -> root;
+	server -> $varSrv;
+}
+
+ProcessAgent MetaHttdpChild {
+	parent -> MetaHttpd;
+	user -> apache;
+}
+
+Coordinator Site {
+	needs Coordinator File;
+	needs ProcessAgent httpd;
+	httpd = MetaHttpd;
+}
+Server NfsSrv {
+	address -> devexpert02;
+}
+
+Server WebSrv01 {
+	address -> devexpert03;
+}
+
+Server WebSrv02 {
+	address -> devexpert04;
+}
+
+ProcessAgent nfsd{
+	server -> $nfsHost;
+	procName -> *nfsd;
+	user -> root;
+}
+
+
+FileAgent exportFile{
+	server -> $nfsHost;
+	filename -> /etc/exports;
+	content -> /devweb \\*\\(ro,root_squash,no_wdelay,fsid=1\\);
+}
+
+FileAgent s1Index {
+	server -> $nfsHost;
+	filename -> /devweb/site1/index.php;
+	owner -> root;
+	grp -> root;
+	md5 -> 827406447ac02d10842e4a9fa050d99e;
+}
+
+FileAgent s2Index {
+	server -> $nfsHost;
+	filename -> /devweb/site2/index.php;
+	owner -> root;
+	grp -> root;
+	md5 -> 6c88b56016412cb5c4736154a1bbe530;
+}
+
+
+Coordinator Nfs{
+	set $nfsHost NfsSrv;
+	needs ProcessAgent n;
+	needs FileAgent f;
+	needs FileAgent fs1;
+	needs FileAgent fs2;
+	n = nfsd;
+	f = exportFile;
+	fs1 = s1Index;
+	fs2 = s2Index;
+}
+
+ProcessAgent mysqld{
+	server -> WebSrv02;
+	procName -> /usr/bin/mysqld;
+}
+
+
+Coordinator Mysql{
+	needs ProcessAgent m;
+	m = mysqld;
+}
+
+
+FileAgent Site2Index {
+	filename -> /var/www/html/index.php;
+	server -> $varSrv;
+	md5 -> 6c88b56016412cb5c4736154a1bbe530;
+	content -> This comes from the storage;
+}
+
+Coordinator Site2File {
+	needs FileAgent index;
+	index = Site2Index;
+}
+
+Coordinator Site2 : Site {
+	requires Mysql;
+	set $varSrv WebSrv02;
+	setEnv WebSrv02 mountpoint devexpert02:/devweb/site2/ /var/www/html/ nfs ro,hard,intr 0 0;
+	File = Site2File;
+}
+
+FileAgent Site1Index{
+	server -> $varSrv;
+	filename -> /var/www/html/index.php;
+}
+
+Coordinator Site1File {
+	needs FileAgent a;
+	a = Site1Index;
+}
+
+
+Coordinator Site1 : Site {
+	set $varSrv WebSrv01;
+	File = Site1File;
+}
+
+
+Coordinator Web {
+	needs Coordinator x;
+	needs Coordinator y;
+	needs Coordinator z;
+	x = Site1;
+	y = Site2;
+	z = Mysql;
+}
